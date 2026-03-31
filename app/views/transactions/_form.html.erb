@@ -1,0 +1,60 @@
+<section>
+  <h2><%= transaction.persisted? ? t("transactions.form.edit_title") : t("transactions.form.new_title") %></h2>
+
+  <% if transaction.errors.any? %>
+    <section role="alert">
+      <h3><%= t("transactions.form.errors_title") %></h3>
+      <ul>
+        <% transaction.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+
+  <%= form_with model: transaction do |f| %>
+    <% if params[:return_to].present? %>
+      <%= hidden_field_tag :return_to, params[:return_to] %>
+    <% end %>
+    <fieldset data-controller="last-date"
+      <% if last_transaction %>
+              data-last-date-day-value="<%= last_transaction.date.day %>"
+              data-last-date-month-value="<%= last_transaction.date.month %>"
+              data-last-date-year-value="<%= last_transaction.date.year %>"
+      <% end %>>
+      <legend><%= t("transactions.form.date_legend") %></legend>
+      <%= f.date_select :date, order: [ :day, :month, :year ],
+          start_year: Date.current.year - 1, end_year: Date.current.year,
+          prefix: "transaction", field_name: "date" %>
+      <% if last_transaction %>
+        <button type="button" data-action="last-date#fill">
+          <%= t("transactions.form.use_last_date", date: l(last_transaction.date, format: "%-d %b")) %>
+        </button>
+      <% end %>
+    </fieldset>
+
+    <div>
+      <%= f.label :amount, t("transactions.form.amount") %>
+      <%= f.number_field :amount, step: 0.01, min: 0.01, required: true,
+          value: transaction.amount&.abs %>
+    </div>
+
+    <div data-controller="category-select">
+      <%= f.label :category_id, t("transactions.form.category") %>
+      <%= render "categories/select", categories: categories,
+          selected: transaction.category_id %>
+
+      <template data-category-select-target="formTemplate">
+        <%= render "categories/form" %>
+      </template>
+      <div data-category-select-target="formContainer"></div>
+    </div>
+
+    <div>
+      <%= f.label :description, t("transactions.form.description") %>
+      <%= f.text_field :description, maxlength: 140 %>
+    </div>
+
+    <%= f.submit t("transactions.form.submit") %>
+  <% end %>
+</section>

@@ -1,0 +1,33 @@
+<main>
+  <h1><%= t("transactions.index.title") %></h1>
+
+  <%= render "form", transaction: @transaction, categories: @categories, last_transaction: @last_transaction %>
+
+  <% if @transactions.any? %>
+    <section>
+      <h2><%= t("transactions.index.recent") %></h2>
+      <table>
+        <thead>
+          <tr>
+            <th><%= t("transactions.table.date") %></th>
+            <th><%= t("transactions.table.category") %></th>
+            <th><%= t("transactions.table.amount") %></th>
+            <th><%= t("transactions.table.description") %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @transactions.each do |txn| %>
+            <tr>
+              <td><%= l(txn.date, format: "%-d %b") %></td>
+              <td><%= txn.category.name %></td>
+              <td class="money"><%= number_to_currency(txn.amount) %></td>
+              <td><%= txn.description %></td>
+              <td><a href="<%= edit_transaction_path(txn) %>"><%= t("transactions.table.edit") %></a></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
+  <% end %>
+</main>

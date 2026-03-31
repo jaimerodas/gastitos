@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title><%= content_for(:title) || "Gastitos" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Gastitos">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <% if current_user %>
+      <header>
+        <nav>
+          <a href="<%= root_path %>">Gastitos</a>
+          <% if MonthlyPeriod.exists? %>
+            <a href="<%= monthly_periods_path %>"><%= t("layouts.application.months") %></a>
+          <% end %>
+          <form action="<%= session_path %>" method="post">
+            <input type="hidden" name="_method" value="delete">
+            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+            <button type="submit"><%= t("layouts.application.logout") %></button>
+          </form>
+        </nav>
+      </header>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <p role="status"><%= flash[:notice] %></p>
+    <% end %>
+
+    <%= yield %>
+  </body>
+</html>

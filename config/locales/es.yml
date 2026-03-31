@@ -1,0 +1,176 @@
+es:
+  activerecord:
+    models:
+      user: usuario
+      category: categoría
+      transaction: transacción
+      monthly_period: periodo mensual
+    attributes:
+      user:
+        name: nombre
+        email: correo electrónico
+        password: contraseña
+        password_confirmation: confirmación de contraseña
+      category:
+        name: nombre
+        category_type: tipo
+      transaction:
+        amount: monto
+        date: fecha
+        description: descripción
+        category: categoría
+        category_id: categoría
+      monthly_period:
+        month: mes
+        year: año
+        starting_balance: saldo inicial
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              taken: ya está en uso
+        category:
+          attributes:
+            name:
+              taken: ya existe
+  errors:
+    messages:
+      blank: no puede estar vacío
+      invalid: no es válido
+      too_short: es demasiado corto (mínimo %{count} caracteres)
+      too_long: es demasiado largo (máximo %{count} caracteres)
+      not_a_number: no es un número
+      other_than: debe ser diferente de %{count}
+      taken: ya está en uso
+      required: es obligatorio
+      inclusion: no está incluido en la lista
+  number:
+    currency:
+      format:
+        unit: "$"
+        delimiter: ","
+        separator: "."
+        precision: 2
+        format: "%u%n"
+  date:
+    abbr_month_names:
+      - ~
+      - ene
+      - feb
+      - mar
+      - abr
+      - may
+      - jun
+      - jul
+      - ago
+      - sep
+      - oct
+      - nov
+      - dic
+    month_names:
+      - ~
+      - Enero
+      - Febrero
+      - Marzo
+      - Abril
+      - Mayo
+      - Junio
+      - Julio
+      - Agosto
+      - Septiembre
+      - Octubre
+      - Noviembre
+      - Diciembre
+    formats:
+      default: "%-d/%m/%Y"
+      short: "%-d %b"
+    order:
+      - :day
+      - :month
+      - :year
+  sessions:
+    new:
+      title: Iniciar sesión
+      email: Correo electrónico
+      password: Contraseña
+      submit: Iniciar sesión
+      signup_link: Crear una cuenta
+    create:
+      unapproved: Tu cuenta aún no ha sido aprobada.
+      invalid: Correo electrónico o contraseña incorrectos.
+  users:
+    new:
+      title: Crear cuenta
+      name: Nombre
+      email: Correo electrónico
+      password: Contraseña
+      password_confirmation: Confirmar contraseña
+      submit: Crear cuenta
+      login_link: ¿Ya tienes cuenta? Inicia sesión
+      errors_title: "No se pudo crear la cuenta:"
+    create:
+      pending_approval: Cuenta creada. Un administrador debe aprobar tu cuenta antes de iniciar sesión.
+  transactions:
+    index:
+      title: Gastitos
+      recent: Transacciones recientes
+    form:
+      new_title: Nueva transacción
+      edit_title: Editar transacción
+      date_legend: Fecha
+      use_last_date: "Usar última fecha (%{date})"
+      amount: Monto
+      category: Categoría
+      select_category: Selecciona una categoría
+      description: Descripción
+      submit: Guardar transacción
+      errors_title: "No se pudo guardar la transacción:"
+    edit:
+      cancel: Cancelar
+    table:
+      date: Fecha
+      category: Categoría
+      description: Descripción
+      amount: Monto
+      edit: editar
+  categories:
+    select:
+      expenses: Gastos
+      income: Ingresos
+      create_new: "+ Crear nueva categoría"
+    form:
+      title: Nueva categoría
+      name: Nombre
+      type: Tipo
+      expense: Gasto
+      income: Ingreso
+      submit: Agregar categoría
+      cancel: Cancelar
+  monthly_periods:
+    index:
+      title: Meses
+    show:
+      pnl_title: Resumen
+      starting_balance: Saldo inicial
+      income_section: Ingresos
+      total_income: Total ingresos
+      expenses_section: Gastos
+      total_expenses: Total gastos
+      net_income: Resultado neto
+      ending_balance: Saldo final
+      transactions_title: Transacciones
+      edit: editar
+      delete: eliminar
+      confirm_delete: "¿Estás seguro de que quieres eliminar esta transacción?"
+      back: Volver a meses
+      edit_balance: editar
+    edit:
+      title: "Editar saldo inicial — %{month}"
+      starting_balance: Saldo inicial
+      submit: Guardar
+      cancel: Cancelar
+  layouts:
+    application:
+      months: Meses
+      logout: Cerrar sesión

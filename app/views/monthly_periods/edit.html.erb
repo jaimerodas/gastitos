@@ -1,0 +1,14 @@
+<main>
+  <h1><%= t("monthly_periods.edit.title", month: @period.display_name) %></h1>
+
+  <%= form_with model: @period, url: monthly_period_path(@period) do |f| %>
+    <div>
+      <%= f.label :starting_balance, t("monthly_periods.edit.starting_balance") %>
+      <%= f.number_field :starting_balance, step: 0.01 %>
+    </div>
+
+    <%= f.submit t("monthly_periods.edit.submit") %>
+  <% end %>
+
+  <p><a href="<%= monthly_period_path(@period) %>"><%= t("monthly_periods.edit.cancel") %></a></p>
+</main>

@@ -1,0 +1,16 @@
+<fieldset data-category-select-target="newForm">
+  <legend><%= t("categories.form.title") %></legend>
+  <div>
+    <label for="category_name"><%= t("categories.form.name") %></label>
+    <input type="text" name="category[name]" id="category_name" required>
+  </div>
+  <div>
+    <label for="category_category_type"><%= t("categories.form.type") %></label>
+    <select name="category[category_type]" id="category_category_type" required>
+      <option value="expense"><%= t("categories.form.expense") %></option>
+      <option value="income"><%= t("categories.form.income") %></option>
+    </select>
+  </div>
+  <button type="button" data-action="category-select#createCategory"><%= t("categories.form.submit") %></button>
+  <button type="button" data-action="category-select#cancel"><%= t("categories.form.cancel") %></button>
+</fieldset>

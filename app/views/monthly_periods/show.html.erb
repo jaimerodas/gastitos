@@ -1,0 +1,96 @@
+<main>
+  <h1><%= @period.display_name %></h1>
+
+  <section>
+    <h2><%= t("monthly_periods.show.pnl_title") %></h2>
+    <table>
+      <tbody>
+        <tr>
+          <td><%= t("monthly_periods.show.starting_balance") %></td>
+          <td class="money"><%= number_to_currency(@period.starting_balance) %></td>
+          <td><a href="<%= edit_monthly_period_path(@period) %>"><%= t("monthly_periods.show.edit_balance") %></a></td>
+        </tr>
+
+        <% if @income_by_category.any? %>
+          <tr class="divider">
+            <th colspan="3"><%= t("monthly_periods.show.income_section") %></th>
+          </tr>
+          <% @income_by_category.each do |name, total| %>
+            <tr>
+              <td><%= name %></td>
+              <td class="money"><%= number_to_currency(total) %></td>
+              <td></td>
+            </tr>
+          <% end %>
+          <tr>
+            <td><strong><%= t("monthly_periods.show.total_income") %></strong></td>
+            <td class="money"><strong><%= number_to_currency(@period.total_income) %></strong></td>
+            <td></td>
+          </tr>
+        <% end %>
+
+        <% if @expenses_by_category.any? %>
+          <tr class="divider">
+            <th colspan="3"><%= t("monthly_periods.show.expenses_section") %></th>
+          </tr>
+          <% @expenses_by_category.each do |name, total| %>
+            <tr>
+              <td><%= name %></td>
+              <td class="money"><%= number_to_currency(total.abs) %></td>
+              <td></td>
+            </tr>
+          <% end %>
+          <tr>
+            <td><strong><%= t("monthly_periods.show.total_expenses") %></strong></td>
+            <td class="money"><strong><%= number_to_currency(@period.total_expenses.abs) %></strong></td>
+            <td></td>
+          </tr>
+        <% end %>
+
+        <tr>
+          <td><strong><%= t("monthly_periods.show.net_income") %></strong></td>
+          <td class="money"><strong><%= number_to_currency(@period.net_income) %></strong></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><strong><%= t("monthly_periods.show.ending_balance") %></strong></td>
+          <td class="money"><strong><%= number_to_currency(@period.ending_balance) %></strong></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <% if @transactions.any? %>
+    <section>
+      <h2><%= t("monthly_periods.show.transactions_title") %></h2>
+      <table>
+        <thead>
+          <tr>
+            <th><%= t("transactions.table.date") %></th>
+            <th><%= t("transactions.table.category") %></th>
+            <th><%= t("transactions.table.description") %></th>
+            <th><%= t("transactions.table.amount") %></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @transactions.each do |txn| %>
+            <tr>
+              <td><%= l(txn.date, format: "%-d %b") %></td>
+              <td><%= txn.category.name %></td>
+              <td><%= txn.description %></td>
+              <td class="money"><%= number_to_currency(txn.amount) %></td>
+              <td><a href="<%= edit_transaction_path(txn, return_to: monthly_period_path(@period)) %>"><%= t("monthly_periods.show.edit") %></a></td>
+              <td><%= button_to t("monthly_periods.show.delete"), transaction_path(txn),
+                      method: :delete, data: { turbo_confirm: t("monthly_periods.show.confirm_delete") } %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
+  <% end %>
+
+  <p><a href="<%= monthly_periods_path %>"><%= t("monthly_periods.show.back") %></a></p>
+</main>

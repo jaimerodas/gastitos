@@ -1,0 +1,42 @@
+<main>
+  <h1><%= t("users.new.title") %></h1>
+
+  <%= form_with model: @user do |f| %>
+    <% if @user.errors.any? %>
+      <section role="alert">
+        <h2><%= t("users.new.errors_title") %></h2>
+        <ul>
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </section>
+    <% end %>
+
+    <div>
+      <%= f.label :name, t("users.new.name") %>
+      <%= f.text_field :name, required: true, autofocus: true %>
+    </div>
+
+    <div>
+      <%= f.label :email, t("users.new.email") %>
+      <%= f.email_field :email, required: true %>
+    </div>
+
+    <div>
+      <%= f.label :password, t("users.new.password") %>
+      <%= f.password_field :password, required: true %>
+    </div>
+
+    <div>
+      <%= f.label :password_confirmation, t("users.new.password_confirmation") %>
+      <%= f.password_field :password_confirmation, required: true %>
+    </div>
+
+    <%= f.submit t("users.new.submit") %>
+  <% end %>
+
+  <% if User.exists? %>
+    <p><a href="<%= new_session_path %>"><%= t("users.new.login_link") %></a></p>
+  <% end %>
+</main>

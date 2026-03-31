@@ -1,0 +1,11 @@
+<main>
+  <h1><%= t("monthly_periods.index.title") %></h1>
+
+  <ul>
+    <% @periods.each do |period| %>
+      <li>
+        <a href="<%= monthly_period_path(period) %>"><%= period.display_name %></a>
+      </li>
+    <% end %>
+  </ul>
+</main>

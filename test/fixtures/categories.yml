@@ -1,0 +1,11 @@
+food:
+  name: Food
+  category_type: expense
+
+rideshare:
+  name: Rideshare
+  category_type: expense
+
+salary:
+  name: Salary
+  category_type: income

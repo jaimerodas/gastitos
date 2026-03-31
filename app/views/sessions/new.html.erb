@@ -1,0 +1,23 @@
+<main>
+  <h1><%= t("sessions.new.title") %></h1>
+
+  <% if flash[:alert] %>
+    <p role="alert"><%= flash[:alert] %></p>
+  <% end %>
+
+  <%= form_with url: session_path do |f| %>
+    <div>
+      <%= f.label :email, t("sessions.new.email") %>
+      <%= f.email_field :email, required: true, autofocus: true %>
+    </div>
+
+    <div>
+      <%= f.label :password, t("sessions.new.password") %>
+      <%= f.password_field :password, required: true %>
+    </div>
+
+    <%= f.submit t("sessions.new.submit") %>
+  <% end %>
+
+  <p><a href="<%= new_user_path %>"><%= t("sessions.new.signup_link") %></a></p>
+</main>

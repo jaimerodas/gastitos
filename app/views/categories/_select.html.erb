@@ -1,0 +1,20 @@
+<select name="transaction[category_id]" id="transaction_category_id"
+        required data-category-select-target="select"
+        data-action="category-select#changed">
+  <option value=""><%= t("transactions.form.select_category") %></option>
+  <% if categories.expenses.any? %>
+    <optgroup label="<%= t("categories.select.expenses") %>">
+      <% categories.expenses.each do |cat| %>
+        <option value="<%= cat.id %>" <%= "selected" if cat.id == selected %>><%= cat.name %></option>
+      <% end %>
+    </optgroup>
+  <% end %>
+  <% if categories.income.any? %>
+    <optgroup label="<%= t("categories.select.income") %>">
+      <% categories.income.each do |cat| %>
+        <option value="<%= cat.id %>" <%= "selected" if cat.id == selected %>><%= cat.name %></option>
+      <% end %>
+    </optgroup>
+  <% end %>
+  <option value="new"><%= t("categories.select.create_new") %></option>
+</select>

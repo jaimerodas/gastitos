@@ -1,0 +1,20 @@
+jaime:
+  name: Jaime
+  email: jaime@example.com
+  password_digest: <%= BCrypt::Password.create("password123") %>
+  admin: true
+  approved: true
+
+sofia:
+  name: Sofía
+  email: sofia@example.com
+  password_digest: <%= BCrypt::Password.create("password123") %>
+  admin: false
+  approved: true
+
+unapproved:
+  name: Pending
+  email: pending@example.com
+  password_digest: <%= BCrypt::Password.create("password123") %>
+  admin: false
+  approved: false
