@@ -13,25 +13,39 @@
   <% end %>
 
   <%= form_with model: transaction do |f| %>
-    <% if params[:return_to].present? %>
-      <%= hidden_field_tag :return_to, params[:return_to] %>
-    <% end %>
-    <fieldset data-controller="last-date"
-      <% if last_transaction %>
-              data-last-date-day-value="<%= last_transaction.date.day %>"
-              data-last-date-month-value="<%= last_transaction.date.month %>"
-              data-last-date-year-value="<%= last_transaction.date.year %>"
-      <% end %>>
-      <legend><%= t("transactions.form.date_legend") %></legend>
-      <%= f.date_select :date, order: [ :day, :month, :year ],
-          start_year: Date.current.year - 1, end_year: Date.current.year,
-          prefix: "transaction", field_name: "date" %>
-      <% if last_transaction %>
-        <button type="button" data-action="last-date#fill">
-          <%= t("transactions.form.use_last_date", date: l(last_transaction.date, format: "%-d %b")) %>
-        </button>
+    <% if local_assigns[:period] %>
+      <%= hidden_field_tag :return_to, monthly_period_path(period) %>
+      <input type="hidden" name="transaction[date(1i)]" value="<%= period.year %>">
+      <input type="hidden" name="transaction[date(2i)]" value="<%= period.month %>">
+      <fieldset>
+        <legend><%= t("transactions.form.day_legend") %></legend>
+        <select name="transaction[date(3i)]" id="transaction_date_3i">
+          <% (1..Time.days_in_month(period.month, period.year)).each do |d| %>
+            <option value="<%= d %>" <%= "selected" if d == transaction.date&.day %>><%= d %></option>
+          <% end %>
+        </select>
+      </fieldset>
+    <% else %>
+      <% if params[:return_to].present? %>
+        <%= hidden_field_tag :return_to, params[:return_to] %>
       <% end %>
-    </fieldset>
+      <fieldset data-controller="last-date"
+        <% if last_transaction %>
+                data-last-date-day-value="<%= last_transaction.date.day %>"
+                data-last-date-month-value="<%= last_transaction.date.month %>"
+                data-last-date-year-value="<%= last_transaction.date.year %>"
+        <% end %>>
+        <legend><%= t("transactions.form.date_legend") %></legend>
+        <%= f.date_select :date, order: [ :day, :month, :year ],
+            start_year: Date.current.year - 1, end_year: Date.current.year,
+            prefix: "transaction", field_name: "date" %>
+        <% if last_transaction %>
+          <button type="button" data-action="last-date#fill">
+            <%= t("transactions.form.use_last_date", date: l(last_transaction.date, format: "%-d %b")) %>
+          </button>
+        <% end %>
+      </fieldset>
+    <% end %>
 
     <div class="field">
       <%= f.label :amount, t("transactions.form.amount") %>

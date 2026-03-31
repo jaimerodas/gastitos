@@ -27,7 +27,7 @@
     <% if current_user %>
       <header>
         <nav>
-          <a href="<%= root_path %>">Gastitos</a>
+          <a href="<%= root_path %>">Inicio</a>
           <% if MonthlyPeriod.exists? %>
             <a href="<%= monthly_periods_path %>"><%= t("layouts.application.months") %></a>
           <% end %>

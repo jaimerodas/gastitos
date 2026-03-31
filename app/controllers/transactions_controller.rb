@@ -11,10 +11,22 @@ class TransactionsController < ApplicationController
     @transaction.created_by = current_user
 
     if @transaction.save
-      redirect_to root_path
+      period = MonthlyPeriod.find_by!(year: @transaction.date.year, month: @transaction.date.month)
+      redirect_to monthly_period_path(period)
     else
-      load_index_data
-      render :index, status: :unprocessable_entity
+      @categories = Category.order(:name)
+      return_to = params[:return_to]
+      if return_to.present? && return_to.match(%r{\A/meses/(\d{4}-\d{2})\z})
+        @period = MonthlyPeriod.find_by_slug!($1)
+        @transactions = @period.transactions.recent.includes(:category, :created_by)
+        @income_by_category = @period.income_by_category
+        @expenses_by_category = @period.expenses_by_category
+        @last_transaction = @period.transactions.recent.first
+        render "monthly_periods/show", status: :unprocessable_entity
+      else
+        load_index_data
+        render :index, status: :unprocessable_entity
+      end
     end
   end
 

@@ -150,6 +150,71 @@ class MonthlyPeriodsTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_path
   end
 
+  # -- Transaction form on show --
+
+  test "show page renders transaction form with day-only selector" do
+    period = monthly_periods(:march_2026)
+    get monthly_period_path(period)
+    assert_select "h2", "Nueva transacción"
+    assert_select "form[action='#{transactions_path}']"
+    # Day select present
+    assert_select "select[name='transaction[date(3i)]']"
+    # Full date selects (month/year) should NOT be present as visible selects
+    assert_select "select[name='transaction[date(2i)]']", count: 0
+    assert_select "select[name='transaction[date(1i)]']", count: 0
+    # Hidden fields for month and year
+    assert_select "input[type=hidden][name='transaction[date(1i)]'][value='#{period.year}']"
+    assert_select "input[type=hidden][name='transaction[date(2i)]'][value='#{period.month}']"
+  end
+
+  test "show page day selector has correct number of days" do
+    period = monthly_periods(:march_2026)
+    get monthly_period_path(period)
+    # March has 31 days
+    assert_select "select[name='transaction[date(3i)]'] option", count: 31
+  end
+
+  test "creating transaction from month view redirects back to month" do
+    period = monthly_periods(:march_2026)
+    assert_difference "Transaction.count", 1 do
+      post transactions_path, params: {
+        return_to: monthly_period_path(period),
+        transaction: {
+          "date(1i)" => "2026", "date(2i)" => "3", "date(3i)" => "15",
+          amount: "25.00",
+          category_id: categories(:food).id,
+          description: "From month view"
+        }
+      }
+    end
+    assert_redirected_to monthly_period_path(period)
+  end
+
+  test "creating transaction from month view with invalid data re-renders show" do
+    period = monthly_periods(:march_2026)
+    assert_no_difference "Transaction.count" do
+      post transactions_path, params: {
+        return_to: monthly_period_path(period),
+        transaction: {
+          "date(1i)" => "2026", "date(2i)" => "3", "date(3i)" => "15",
+          amount: "",
+          category_id: "",
+          description: ""
+        }
+      }
+    end
+    assert_response :unprocessable_entity
+    assert_select "section[role=alert]"
+    # Should still show the P&L section from the month view
+    assert_select "h2", "Resumen"
+  end
+
+  test "show page form includes return_to hidden field" do
+    period = monthly_periods(:march_2026)
+    get monthly_period_path(period)
+    assert_select "input[type=hidden][name='return_to'][value='#{monthly_period_path(period)}']"
+  end
+
   # -- Auto-creation of periods --
 
   test "creating a transaction auto-creates a monthly period" do

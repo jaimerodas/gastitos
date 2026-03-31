@@ -7,9 +7,10 @@ class MonthlyPeriodsController < ApplicationController
 
   def show
     @period = MonthlyPeriod.find_by_slug!(params[:id])
-    @transactions = @period.transactions.recent.includes(:category, :created_by)
-    @income_by_category = @period.income_by_category
-    @expenses_by_category = @period.expenses_by_category
+    load_show_data
+    @transaction = Transaction.new(date: default_date_for_period(@period))
+    @categories = Category.order(:name)
+    @last_transaction = @period.transactions.recent.first
   end
 
   def edit
@@ -27,6 +28,20 @@ class MonthlyPeriodsController < ApplicationController
   end
 
   private
+
+  def load_show_data
+    @transactions = @period.transactions.recent.includes(:category, :created_by)
+    @income_by_category = @period.income_by_category
+    @expenses_by_category = @period.expenses_by_category
+  end
+
+  def default_date_for_period(period)
+    if period.year == Date.current.year && period.month == Date.current.month
+      Date.current
+    else
+      Date.new(period.year, period.month, 1)
+    end
+  end
 
   def period_params
     params.expect(monthly_period: [ :starting_balance ])

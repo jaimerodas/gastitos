@@ -60,9 +60,9 @@ class TransactionsTest < ActionDispatch::IntegrationTest
         description: "Lunch"
       } }
     end
-    assert_redirected_to root_path
-
     txn = Transaction.last
+    assert_redirected_to monthly_period_path(MonthlyPeriod.find_by(year: 2026, month: 3))
+
     assert_equal Date.new(2026, 3, 30), txn.date
     assert_equal(-15.50, txn.amount)
     assert_equal categories(:food), txn.category
