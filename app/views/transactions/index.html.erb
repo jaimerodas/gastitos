@@ -12,16 +12,16 @@
             <th><%= t("transactions.table.date") %></th>
             <th><%= t("transactions.table.category") %></th>
             <th><%= t("transactions.table.amount") %></th>
-            <th><%= t("transactions.table.description") %></th>
           </tr>
         </thead>
         <tbody>
           <% @transactions.each do |txn| %>
             <tr>
               <td><% period = @periods_by_month[[txn.date.year, txn.date.month]] %><% if period %><a href="<%= monthly_period_path(period) %>"><%= txn.date.strftime("%Y-%m") %></a>-<%= "%02d" % txn.date.day %><% else %><%= txn.date.strftime("%Y-%m-%d") %><% end %></td>
-              <td><a href="<%= edit_transaction_path(txn) %>"><%= txn.category.name %></a></td>
+              <td>
+                <a href="<%= edit_transaction_path(txn) %>"><%= txn.category.name %></a><% if txn.description.present? %>: <%= txn.description %><% end %>
+              </td>
               <td class="money"><%= number_to_currency(txn.amount) %></td>
-              <td><%= txn.description %></td>
             </tr>
           <% end %>
         </tbody>

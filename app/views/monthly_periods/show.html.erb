@@ -6,14 +6,13 @@
     <table>
       <tbody>
         <tr>
-          <td><%= t("monthly_periods.show.starting_balance") %></td>
+          <td><a href="<%= edit_monthly_period_path(@period) %>"><%= t("monthly_periods.show.starting_balance") %></a></td>
           <td class="money"><%= number_to_currency(@period.starting_balance) %></td>
-          <td><a href="<%= edit_monthly_period_path(@period) %>"><%= t("monthly_periods.show.edit_balance") %></a></td>
         </tr>
 
         <% if @income_by_category.any? %>
           <tr class="divider">
-            <th colspan="3"><%= t("monthly_periods.show.income_section") %></th>
+            <th colspan="2"><%= t("monthly_periods.show.income_section") %></th>
           </tr>
           <% @income_by_category.each do |name, total| %>
             <tr>
@@ -31,7 +30,7 @@
 
         <% if @expenses_by_category.any? %>
           <tr class="divider">
-            <th colspan="3"><%= t("monthly_periods.show.expenses_section") %></th>
+            <th colspan="2"><%= t("monthly_periods.show.expenses_section") %></th>
           </tr>
           <% @expenses_by_category.each do |name, total| %>
             <tr>
@@ -65,22 +64,19 @@
     <section>
       <h2><%= t("monthly_periods.show.transactions_title") %></h2>
       <table>
-        <thead>
-          <tr>
-            <th><%= t("transactions.table.date") %></th>
-            <th><%= t("transactions.table.category") %></th>
-            <th><%= t("transactions.table.amount") %></th>
-            <th><%= t("transactions.table.description") %></th>
-          </tr>
-        </thead>
         <tbody>
-          <% @transactions.each do |txn| %>
+          <% @transactions.group_by {|t| t.date.day }.each do |day, txns| %>
             <tr>
-              <td><%= l(txn.date, format: "%-d %b") %></td>
-              <td><a href="<%= edit_transaction_path(txn, return_to: monthly_period_path(@period)) %>"><%= txn.category.name %></a></td>
-              <td class="money"><%= number_to_currency(txn.amount) %></td>
-              <td><%= txn.description %></td>
+              <th colspan="2"><%= day %></th>
             </tr>
+            <% txns.each do |txn| %>
+            <tr>
+              <td>
+                <a href="<%= edit_transaction_path(txn, return_to: monthly_period_path(@period)) %>"><%= txn.category.name %></a><% if txn.description.present? %>: <%= txn.description %><% end %>
+              </td>
+              <td class="money"><%= number_to_currency(txn.amount) %></td>
+            </tr>
+            <% end %>
           <% end %>
         </tbody>
       </table>

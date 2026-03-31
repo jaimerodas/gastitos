@@ -4,6 +4,19 @@ body {
   line-height: 1.2;
 
   background: rgb(250,250,250);
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  padding: 1em 0;
+  nav {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 main {
@@ -26,7 +39,6 @@ h1, h2, h3, h4 {
 }
 
 table {
-  padding: 1em;
 
   th {
     font-size: 0.875em;
@@ -38,3 +50,28 @@ table {
   }
 }
 
+select, button, input {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+#add-transaction {
+  fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  legend {
+    padding: 0;
+    display: contents;
+  }
+  fieldset, .field {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 2em;
+    margin-bottom: 0.5em;
+    box-sizing: border-box;
+  }
+}
