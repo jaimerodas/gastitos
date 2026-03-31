@@ -56,6 +56,10 @@ class MonthlyPeriod < ApplicationRecord
     I18n.l(start_date, format: "%B %Y").capitalize
   end
 
+  def display_month
+    I18n.l(start_date, format: "%B").capitalize
+  end
+
   def self.find_or_create_for_date(date)
     find_or_create_by(month: date.month, year: date.year) do |period|
       period.starting_balance = default_starting_balance_for(date.month, date.year)

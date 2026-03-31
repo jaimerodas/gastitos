@@ -24,7 +24,7 @@ class MonthlyPeriodsTest < ActionDispatch::IntegrationTest
     get monthly_periods_path
     assert_response :success
     assert_select "h1", "Meses"
-    assert_select "a", monthly_periods(:march_2026).display_name
+    assert_select "a", monthly_periods(:march_2026).display_month
   end
 
   test "index requires login" do
@@ -67,8 +67,8 @@ class MonthlyPeriodsTest < ActionDispatch::IntegrationTest
   test "show lists transactions with category as edit link" do
     period = monthly_periods(:march_2026)
     get monthly_period_path(period)
-    assert_select "h2", "Transacciones"
-    assert_select "td a", text: "Food"
+    assert_select "h2", /Transacciones/
+    assert_select "td a", /Food/
   end
 
   # -- Edit balance --

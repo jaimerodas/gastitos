@@ -1,11 +1,14 @@
-<main>
+<main id="months">
   <h1><%= t("monthly_periods.index.title") %></h1>
 
+  <% @periods.group_by {|p| p.year }.each do |year, periods| %>
+  <h2><%= year %></h2>
   <ul>
-    <% @periods.each do |period| %>
+    <% periods.each do |period| %>
       <li>
-        <a href="<%= monthly_period_path(period) %>"><%= period.display_name %></a>
+        <a href="<%= monthly_period_path(period) %>"><%= period.display_month %></a>
       </li>
     <% end %>
   </ul>
+  <% end %>
 </main>

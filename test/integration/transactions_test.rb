@@ -91,7 +91,7 @@ class TransactionsTest < ActionDispatch::IntegrationTest
 
   test "index shows edit links for each transaction" do
     get root_path
-    assert_select "a[href='#{edit_transaction_path(transactions(:lunch))}']", "Food"
+    assert_select "a[href='#{edit_transaction_path(transactions(:lunch))}']", /Food/
   end
 
   test "edit page shows form with existing values" do

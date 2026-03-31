@@ -65,7 +65,7 @@
 
   <% if @transactions.any? %>
     <section id="transactions">
-      <h2><%= t("monthly_periods.show.transactions_title") %></h2>
+      <h2><%= @transactions.count %> <%= t("monthly_periods.show.transactions_title") %></h2>
       <table>
         <tbody>
           <% @transactions.group_by {|t| t.date.day }.each do |day, txns| %>
@@ -75,7 +75,9 @@
             <% txns.each do |txn| %>
             <tr>
               <td>
-                <a href="<%= edit_transaction_path(txn, return_to: monthly_period_path(@period)) %>"><%= txn.category.name %></a><% if txn.description.present? %>: <%= txn.description %><% end %>
+                <a href="<%= edit_transaction_path(txn, return_to: monthly_period_path(@period)) %>">
+                  <%= txn.category.name %><% if txn.description.present? %>: <%= txn.description %><% end %>
+                </a>
               </td>
               <td class="money"><%= number_to_currency(txn.amount) %></td>
             </tr>

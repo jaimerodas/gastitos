@@ -1,4 +1,4 @@
-<main>
+<main id="login">
   <h1><%= t("sessions.new.title") %></h1>
 
   <% if flash[:alert] %>
@@ -6,12 +6,12 @@
   <% end %>
 
   <%= form_with url: session_path do |f| %>
-    <div>
+    <div class="field">
       <%= f.label :email, t("sessions.new.email") %>
       <%= f.email_field :email, required: true, autofocus: true %>
     </div>
 
-    <div>
+    <div class="field">
       <%= f.label :password, t("sessions.new.password") %>
       <%= f.password_field :password, required: true %>
     </div>
