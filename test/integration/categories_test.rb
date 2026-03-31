@@ -43,5 +43,4 @@ class CategoriesTest < ActionDispatch::IntegrationTest
          as: :json
     assert_redirected_to new_session_path
   end
-
 end

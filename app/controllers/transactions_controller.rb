@@ -64,10 +64,10 @@ class TransactionsController < ApplicationController
     @transactions = Transaction.recent.includes(:category, :created_by).limit(10)
     @categories = Category.order(:name)
 
-    year_months = @transactions.map { |t| [t.date.year, t.date.month] }.uniq
+    year_months = @transactions.map { |t| [ t.date.year, t.date.month ] }.uniq
     if year_months.any?
       conditions = year_months.map { "(year = ? AND month = ?)" }.join(" OR ")
-      @periods_by_month = MonthlyPeriod.where(conditions, *year_months.flatten).index_by { |p| [p.year, p.month] }
+      @periods_by_month = MonthlyPeriod.where(conditions, *year_months.flatten).index_by { |p| [ p.year, p.month ] }
     else
       @periods_by_month = {}
     end

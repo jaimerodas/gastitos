@@ -122,5 +122,4 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
     assert user.admin?
     assert user.approved?
   end
-
 end

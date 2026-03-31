@@ -146,5 +146,4 @@ class TransactionsTest < ActionDispatch::IntegrationTest
     post transactions_path, params: { transaction: { amount: "10" } }
     assert_redirected_to new_session_path
   end
-
 end

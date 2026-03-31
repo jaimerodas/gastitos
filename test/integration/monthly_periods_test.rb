@@ -228,5 +228,4 @@ class MonthlyPeriodsTest < ActionDispatch::IntegrationTest
     end
     assert MonthlyPeriod.find_by(month: 5, year: 2026)
   end
-
 end
