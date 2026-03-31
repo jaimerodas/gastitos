@@ -5,6 +5,15 @@ class MonthlyPeriod < ApplicationRecord
 
   scope :chronological, -> { order(year: :desc, month: :desc) }
 
+  def to_param
+    "#{year}-#{"%02d" % month}"
+  end
+
+  def self.find_by_slug!(slug)
+    year, month = slug.split("-").map(&:to_i)
+    find_by!(year: year, month: month)
+  end
+
   def transactions
     Transaction.where(date: start_date..end_date)
   end

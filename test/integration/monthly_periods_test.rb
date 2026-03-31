@@ -64,12 +64,11 @@ class MonthlyPeriodsTest < ActionDispatch::IntegrationTest
     assert_select "td", "Rideshare"
   end
 
-  test "show lists transactions with edit and delete links" do
+  test "show lists transactions with category as edit link" do
     period = monthly_periods(:march_2026)
     get monthly_period_path(period)
     assert_select "h2", "Transacciones"
-    assert_select "a", text: "editar"
-    assert_select "form[action='#{transaction_path(transactions(:lunch))}'] button", "eliminar"
+    assert_select "td a", text: "Food"
   end
 
   # -- Edit balance --
@@ -94,7 +93,7 @@ class MonthlyPeriodsTest < ActionDispatch::IntegrationTest
     period = monthly_periods(:march_2026)
     txn = transactions(:lunch)
     assert_difference "Transaction.count", -1 do
-      delete transaction_path(txn)
+      delete transaction_path(txn), params: { return_to: monthly_period_path(period) }
     end
     assert_redirected_to monthly_period_path(period)
   end
@@ -120,6 +119,7 @@ class MonthlyPeriodsTest < ActionDispatch::IntegrationTest
     txn = transactions(:lunch)
     get edit_transaction_path(txn, return_to: monthly_period_path(period))
     assert_select "a[href='#{monthly_period_path(period)}']", "Cancelar"
+    assert_select "form[action='#{transaction_path(txn)}'] button", "Eliminar transacción"
   end
 
   test "update transaction with return_to redirects to period" do

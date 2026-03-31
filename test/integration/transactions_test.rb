@@ -19,6 +19,13 @@ class TransactionsTest < ActionDispatch::IntegrationTest
     assert_select "table tbody tr", count: 3
   end
 
+  test "index shows dates in YYYY-MM-DD format with month linked to period" do
+    get root_path
+    period = monthly_periods(:march_2026)
+    txn = transactions(:lunch)
+    assert_select "td a[href='#{monthly_period_path(period)}']", txn.date.strftime("%Y-%m")
+  end
+
   test "index shows no table when there are no transactions" do
     Transaction.delete_all
     get root_path
@@ -94,7 +101,7 @@ class TransactionsTest < ActionDispatch::IntegrationTest
 
   test "index shows edit links for each transaction" do
     get root_path
-    assert_select "a[href='#{edit_transaction_path(transactions(:lunch))}']", "editar"
+    assert_select "a[href='#{edit_transaction_path(transactions(:lunch))}']", "Food"
   end
 
   test "edit page shows form with existing values" do
@@ -109,6 +116,12 @@ class TransactionsTest < ActionDispatch::IntegrationTest
   test "edit page has a cancel link" do
     get edit_transaction_path(transactions(:lunch))
     assert_select "a[href='#{root_path}']", "Cancelar"
+  end
+
+  test "edit page has a delete button" do
+    txn = transactions(:lunch)
+    get edit_transaction_path(txn)
+    assert_select "form[action='#{transaction_path(txn)}'] button", "Eliminar transacción"
   end
 
   test "updating a transaction with valid data" do

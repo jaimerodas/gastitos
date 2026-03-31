@@ -3,5 +3,11 @@
 
   <%= render "form", transaction: @transaction, categories: @categories, last_transaction: @last_transaction %>
 
-  <p><a href="<%= params[:return_to].presence || root_path %>"><%= t("transactions.edit.cancel") %></a></p>
+  <p>
+    <a href="<%= params[:return_to].presence || root_path %>"><%= t("transactions.edit.cancel") %></a>
+    <%= button_to t("transactions.edit.delete"), transaction_path(@transaction),
+        method: :delete,
+        params: { return_to: params[:return_to] },
+        data: { turbo_confirm: t("transactions.edit.confirm_delete") } %>
+  </p>
 </main>

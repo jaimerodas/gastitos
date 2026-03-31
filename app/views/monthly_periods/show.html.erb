@@ -69,22 +69,17 @@
           <tr>
             <th><%= t("transactions.table.date") %></th>
             <th><%= t("transactions.table.category") %></th>
-            <th><%= t("transactions.table.description") %></th>
             <th><%= t("transactions.table.amount") %></th>
-            <th></th>
-            <th></th>
+            <th><%= t("transactions.table.description") %></th>
           </tr>
         </thead>
         <tbody>
           <% @transactions.each do |txn| %>
             <tr>
               <td><%= l(txn.date, format: "%-d %b") %></td>
-              <td><%= txn.category.name %></td>
-              <td><%= txn.description %></td>
+              <td><a href="<%= edit_transaction_path(txn, return_to: monthly_period_path(@period)) %>"><%= txn.category.name %></a></td>
               <td class="money"><%= number_to_currency(txn.amount) %></td>
-              <td><a href="<%= edit_transaction_path(txn, return_to: monthly_period_path(@period)) %>"><%= t("monthly_periods.show.edit") %></a></td>
-              <td><%= button_to t("monthly_periods.show.delete"), transaction_path(txn),
-                      method: :delete, data: { turbo_confirm: t("monthly_periods.show.confirm_delete") } %></td>
+              <td><%= txn.description %></td>
             </tr>
           <% end %>
         </tbody>

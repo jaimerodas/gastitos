@@ -38,12 +38,15 @@ class TransactionsController < ApplicationController
 
   def destroy
     @transaction = Transaction.find(params[:id])
-    month = @transaction.date.month
-    year = @transaction.date.year
     @transaction.destroy
 
-    period = MonthlyPeriod.find_by(month: month, year: year)
-    redirect_to period ? monthly_period_path(period) : root_path
+    return_to = params[:return_to]
+    if return_to.present? && return_to.match(%r{\A/meses/(\d{4}-\d{2})\z})
+      period = MonthlyPeriod.find_by_slug!($1) rescue nil
+      redirect_to period ? monthly_period_path(period) : monthly_periods_path
+    else
+      redirect_to root_path
+    end
   end
 
   private
@@ -52,6 +55,14 @@ class TransactionsController < ApplicationController
     @transactions = Transaction.recent.includes(:category, :created_by).limit(10)
     @categories = Category.order(:name)
     @last_transaction = Transaction.recent.first
+
+    year_months = @transactions.map { |t| [t.date.year, t.date.month] }.uniq
+    if year_months.any?
+      conditions = year_months.map { "(year = ? AND month = ?)" }.join(" OR ")
+      @periods_by_month = MonthlyPeriod.where(conditions, *year_months.flatten).index_by { |p| [p.year, p.month] }
+    else
+      @periods_by_month = {}
+    end
   end
 
   def transaction_params
@@ -60,7 +71,7 @@ class TransactionsController < ApplicationController
 
   def safe_return_path
     return_to = params[:return_to]
-    if return_to.present? && return_to.match?(%r{\A/meses/\d+\z})
+    if return_to.present? && return_to.match?(%r{\A/meses/\d{4}-\d{2}\z})
       return_to
     else
       root_path

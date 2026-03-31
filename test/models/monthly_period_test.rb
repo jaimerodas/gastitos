@@ -100,6 +100,22 @@ class MonthlyPeriodTest < ActiveSupport::TestCase
     assert_equal march.ending_balance, june.starting_balance
   end
 
+  test "to_param returns YYYY-MM format" do
+    period = monthly_periods(:march_2026)
+    assert_equal "2026-03", period.to_param
+  end
+
+  test "find_by_slug! finds period by YYYY-MM slug" do
+    period = MonthlyPeriod.find_by_slug!("2026-03")
+    assert_equal monthly_periods(:march_2026), period
+  end
+
+  test "find_by_slug! raises when not found" do
+    assert_raises(ActiveRecord::RecordNotFound) do
+      MonthlyPeriod.find_by_slug!("2099-01")
+    end
+  end
+
   test "chronological scope orders newest first" do
     MonthlyPeriod.find_or_create_for_date(Date.new(2026, 1, 1))
     periods = MonthlyPeriod.chronological
