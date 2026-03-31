@@ -41,7 +41,6 @@ bin/rails server        # Start dev server
 - **Transaction form** (`_form.html.erb`) is shared between create (index) and edit views
 - **return_to parameter** on transaction edit/update — validated against `/meses/\d+` to prevent open redirects. Passed as hidden field to survive validation re-renders.
 - **Category inline creation** — Stimulus `category-select` controller POSTs JSON to `/categories`, adds option to select dynamically
-- **Last date button** — Stimulus `last-date` controller fills date selects from the most recent transaction's date
 
 ## Testing
 

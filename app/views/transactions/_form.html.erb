@@ -29,21 +29,11 @@
       <% if params[:return_to].present? %>
         <%= hidden_field_tag :return_to, params[:return_to] %>
       <% end %>
-      <fieldset data-controller="last-date"
-        <% if last_transaction %>
-                data-last-date-day-value="<%= last_transaction.date.day %>"
-                data-last-date-month-value="<%= last_transaction.date.month %>"
-                data-last-date-year-value="<%= last_transaction.date.year %>"
-        <% end %>>
+      <fieldset>
         <legend><%= t("transactions.form.date_legend") %></legend>
         <%= f.date_select :date, order: [ :day, :month, :year ],
             start_year: Date.current.year - 1, end_year: Date.current.year,
             prefix: "transaction", field_name: "date" %>
-        <% if last_transaction %>
-          <button type="button" data-action="last-date#fill">
-            <%= t("transactions.form.use_last_date", date: l(last_transaction.date, format: "%-d %b")) %>
-          </button>
-        <% end %>
       </fieldset>
     <% end %>
 

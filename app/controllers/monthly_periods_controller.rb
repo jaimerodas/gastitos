@@ -10,7 +10,6 @@ class MonthlyPeriodsController < ApplicationController
     load_show_data
     @transaction = Transaction.new(date: default_date_for_period(@period))
     @categories = Category.order(:name)
-    @last_transaction = @period.transactions.recent.first
   end
 
   def edit

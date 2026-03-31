@@ -38,16 +38,6 @@ class TransactionsTest < ActionDispatch::IntegrationTest
     assert_select "select[name='transaction[date(3i)]'] option[selected]", Date.current.day.to_s
   end
 
-  test "last date button appears when transactions exist" do
-    get root_path
-    assert_select "button[data-action='last-date#fill']"
-  end
-
-  test "last date button does not appear when no transactions exist" do
-    Transaction.delete_all
-    get root_path
-    assert_select "button[data-action='last-date#fill']", count: 0
-  end
 
   # -- Create --
 

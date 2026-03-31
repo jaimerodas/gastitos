@@ -2,7 +2,7 @@
   <h1><%= @period.display_name %></h1>
 
   <%= render "transactions/form", transaction: @transaction, categories: @categories,
-      last_transaction: @last_transaction, period: @period %>
+      period: @period %>
 
   <section>
     <h2><%= t("monthly_periods.show.pnl_title") %></h2>

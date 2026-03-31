@@ -1,7 +1,7 @@
 <main>
   <h1><%= t("transactions.index.title") %></h1>
 
-  <%= render "form", transaction: @transaction, categories: @categories, last_transaction: @last_transaction %>
+  <%= render "form", transaction: @transaction, categories: @categories %>
 
   <% if @transactions.any? %>
     <section>

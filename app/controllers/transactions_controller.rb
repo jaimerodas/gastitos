@@ -21,7 +21,6 @@ class TransactionsController < ApplicationController
         @transactions = @period.transactions.recent.includes(:category, :created_by)
         @income_by_category = @period.income_by_category
         @expenses_by_category = @period.expenses_by_category
-        @last_transaction = @period.transactions.recent.first
         render "monthly_periods/show", status: :unprocessable_entity
       else
         load_index_data
@@ -33,7 +32,6 @@ class TransactionsController < ApplicationController
   def edit
     @transaction = Transaction.find(params[:id])
     @categories = Category.order(:name)
-    @last_transaction = Transaction.recent.first
   end
 
   def update
@@ -43,7 +41,6 @@ class TransactionsController < ApplicationController
       redirect_to safe_return_path
     else
       @categories = Category.order(:name)
-      @last_transaction = Transaction.recent.first
       render :edit, status: :unprocessable_entity
     end
   end
@@ -66,7 +63,6 @@ class TransactionsController < ApplicationController
   def load_index_data
     @transactions = Transaction.recent.includes(:category, :created_by).limit(10)
     @categories = Category.order(:name)
-    @last_transaction = Transaction.recent.first
 
     year_months = @transactions.map { |t| [t.date.year, t.date.month] }.uniq
     if year_months.any?

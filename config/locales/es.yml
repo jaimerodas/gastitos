@@ -145,7 +145,7 @@ es:
       edit_title: Editar transacción
       date_legend: Fecha
       day_legend: Día
-      use_last_date: "Usar última fecha (%{date})"
+
       amount: Monto
       category: Categoría
       select_category: Selecciona una categoría
