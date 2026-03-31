@@ -4,7 +4,7 @@
   <%= render "form", transaction: @transaction, categories: @categories %>
 
   <% if @transactions.any? %>
-    <section>
+    <section id="transactions">
       <h2><%= t("transactions.index.recent") %></h2>
       <table>
         <thead>

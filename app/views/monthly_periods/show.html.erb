@@ -1,10 +1,10 @@
-<main>
+<main class="double-column">
   <h1><%= @period.display_name %></h1>
 
   <%= render "transactions/form", transaction: @transaction, categories: @categories,
       period: @period %>
 
-  <section>
+  <section id="monthly-summary">
     <h2><%= t("monthly_periods.show.pnl_title") %></h2>
     <table>
       <tbody>
@@ -14,8 +14,8 @@
         </tr>
 
         <% if @income_by_category.any? %>
-          <tr class="divider">
-            <th colspan="2"><%= t("monthly_periods.show.income_section") %></th>
+          <tr>
+            <th class="section" colspan="2"><%= t("monthly_periods.show.income_section") %></th>
           </tr>
           <% @income_by_category.each do |name, total| %>
             <tr>
@@ -32,8 +32,8 @@
         <% end %>
 
         <% if @expenses_by_category.any? %>
-          <tr class="divider">
-            <th colspan="2"><%= t("monthly_periods.show.expenses_section") %></th>
+          <tr>
+            <th class="section" colspan="2"><%= t("monthly_periods.show.expenses_section") %></th>
           </tr>
           <% @expenses_by_category.each do |name, total| %>
             <tr>
@@ -48,7 +48,7 @@
             <td></td>
           </tr>
         <% end %>
-
+        <tr><td colspan="2">&nbsp;</td></tr>
         <tr>
           <td><strong><%= t("monthly_periods.show.net_income") %></strong></td>
           <td class="money"><strong><%= number_to_currency(@period.net_income) %></strong></td>
@@ -64,13 +64,13 @@
   </section>
 
   <% if @transactions.any? %>
-    <section>
+    <section id="transactions">
       <h2><%= t("monthly_periods.show.transactions_title") %></h2>
       <table>
         <tbody>
           <% @transactions.group_by {|t| t.date.day }.each do |day, txns| %>
             <tr>
-              <th colspan="2"><%= day %></th>
+              <th class="section" colspan="2"><%= day %></th>
             </tr>
             <% txns.each do |txn| %>
             <tr>
@@ -85,6 +85,4 @@
       </table>
     </section>
   <% end %>
-
-  <p><a href="<%= monthly_periods_path %>"><%= t("monthly_periods.show.back") %></a></p>
 </main>
