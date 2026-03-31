@@ -111,6 +111,31 @@ es:
       errors_title: "No se pudo crear la cuenta:"
     create:
       pending_approval: Cuenta creada. Un administrador debe aprobar tu cuenta antes de iniciar sesión.
+    admin:
+      index_title: Usuarios
+      name: Nombre
+      email: Correo electrónico
+      status: Estado
+      permissions: Permisos
+      approved_status: Aprobado
+      pending_status: Pendiente
+      admin_role: Administrador
+      normal_role: Normal
+      created_at: Usuario creado
+      approve_button: Aprobar
+      unapprove_button: Revocar aprobación
+      delete_button: Eliminar usuario
+      confirm_delete: "¿Estás seguro de que quieres eliminar este usuario?"
+      grant_admin_button: Hacer administrador
+      revoke_admin_button: Quitar administrador
+      back: Volver a usuarios
+      approved: Usuario aprobado.
+      unapproved: Aprobación revocada.
+      admin_granted: Permisos de administrador otorgados.
+      admin_revoked: Permisos de administrador revocados.
+      destroyed: Usuario eliminado.
+      destroy_failed: No se puede eliminar un usuario que tiene transacciones.
+      cannot_modify_self: No puedes modificar tu propio usuario.
   transactions:
     index:
       title: Gastitos
@@ -175,4 +200,5 @@ es:
   layouts:
     application:
       months: Meses
+      users: Usuarios
       logout: Cerrar sesión

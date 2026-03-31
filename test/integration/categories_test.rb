@@ -44,9 +44,4 @@ class CategoriesTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
   end
 
-  private
-
-  def log_in_as(user)
-    post session_path, params: { email: user.email, password: "password123" }
-  end
 end

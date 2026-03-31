@@ -123,9 +123,4 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
     assert user.approved?
   end
 
-  private
-
-  def log_in_as(user)
-    post session_path, params: { email: user.email, password: "password123" }
-  end
 end

@@ -1,0 +1,36 @@
+<main>
+  <h1><%= @user.name %></h1>
+
+  <dl>
+    <dt><%= t("users.admin.email") %></dt>
+    <dd><%= @user.email %></dd>
+
+    <dt><%= t("users.admin.status") %></dt>
+    <dd><%= @user.approved? ? t("users.admin.approved_status") : t("users.admin.pending_status") %></dd>
+
+    <dt><%= t("users.admin.permissions") %></dt>
+    <dd><%= @user.admin? ? t("users.admin.admin_role") : t("users.admin.normal_role") %></dd>
+
+    <dt><%= t("users.admin.created_at") %></dt>
+    <dd><%= l(@user.created_at.to_date) %></dd>
+  </dl>
+
+  <% if @user != current_user %>
+    <section>
+      <% if @user.approved? %>
+        <%= button_to t("users.admin.unapprove_button"), user_approval_path(@user), method: :delete %>
+      <% else %>
+        <%= button_to t("users.admin.approve_button"), user_approval_path(@user), method: :post %>
+        <%= button_to t("users.admin.delete_button"), user_path(@user), method: :delete, data: { turbo_confirm: t("users.admin.confirm_delete") } %>
+      <% end %>
+
+      <% if @user.admin? %>
+        <%= button_to t("users.admin.revoke_admin_button"), user_admin_role_path(@user), method: :delete %>
+      <% else %>
+        <%= button_to t("users.admin.grant_admin_button"), user_admin_role_path(@user), method: :post %>
+      <% end %>
+    </section>
+  <% end %>
+
+  <p><%= link_to t("users.admin.back"), users_path %></p>
+</main>

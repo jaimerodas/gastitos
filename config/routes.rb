@@ -12,7 +12,10 @@ Rails.application.routes.draw do
   root "transactions#index"
 
   resource :session, only: [ :new, :create, :destroy ]
-  resources :users, only: [ :new, :create ]
+  resources :users, only: [ :new, :create, :index, :show, :destroy ] do
+    resource :approval, only: [ :create, :destroy ]
+    resource :admin_role, only: [ :create, :destroy ]
+  end
   resources :transactions, only: [ :create, :edit, :update, :destroy ]
   resources :categories, only: [ :create ]
   resources :monthly_periods, only: [ :index, :show, :edit, :update ], path: "meses"

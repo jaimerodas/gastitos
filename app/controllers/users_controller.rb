@@ -1,4 +1,15 @@
 class UsersController < ApplicationController
+  before_action :require_login, only: [ :index, :show, :destroy ]
+  before_action :require_admin, only: [ :index, :show, :destroy ]
+  before_action :set_user, only: [ :show, :destroy ]
+
+  def index
+    @users = User.order(:name)
+  end
+
+  def show
+  end
+
   def new
     @user = User.new
   end
@@ -18,7 +29,24 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    if @user == current_user
+      redirect_to user_path(@user), alert: t("users.admin.cannot_modify_self")
+      return
+    end
+
+    if @user.destroy
+      redirect_to users_path, notice: t("users.admin.destroyed")
+    else
+      redirect_to user_path(@user), alert: t("users.admin.destroy_failed")
+    end
+  end
+
   private
+
+  def set_user
+    @user = User.find(params[:id])
+  end
 
   def user_params
     params.expect(user: [ :name, :email, :password, :password_confirmation ])

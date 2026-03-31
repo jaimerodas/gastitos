@@ -1,0 +1,24 @@
+<main>
+  <h1><%= t("users.admin.index_title") %></h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th><%= t("users.admin.name") %></th>
+        <th><%= t("users.admin.email") %></th>
+        <th><%= t("users.admin.status") %></th>
+        <th><%= t("users.admin.permissions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= link_to user.name, user_path(user) %></td>
+          <td><%= link_to user.email, user_path(user) %></td>
+          <td><%= user.approved? ? t("users.admin.approved_status") : t("users.admin.pending_status") %></td>
+          <td><%= user.admin? ? t("users.admin.admin_role") : t("users.admin.normal_role") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</main>

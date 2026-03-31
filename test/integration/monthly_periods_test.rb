@@ -164,9 +164,4 @@ class MonthlyPeriodsTest < ActionDispatch::IntegrationTest
     assert MonthlyPeriod.find_by(month: 5, year: 2026)
   end
 
-  private
-
-  def log_in_as(user)
-    post session_path, params: { email: user.email, password: "password123" }
-  end
 end
