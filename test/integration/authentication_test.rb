@@ -12,7 +12,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
     log_in_as users(:jaime)
     get root_path
     assert_response :success
-    assert_select "h1", "Gastitos"
+    assert_select "h1", I18n.t("transactions.index.title")
   end
 
   # -- Login --

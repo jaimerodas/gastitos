@@ -1,24 +1,23 @@
 <main>
   <h1><%= t("users.admin.index_title") %></h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th><%= t("users.admin.name") %></th>
-        <th><%= t("users.admin.email") %></th>
-        <th><%= t("users.admin.status") %></th>
-        <th><%= t("users.admin.permissions") %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @users.each do |user| %>
-        <tr>
-          <td><%= link_to user.name, user_path(user) %></td>
-          <td><%= link_to user.email, user_path(user) %></td>
-          <td><%= user.approved? ? t("users.admin.approved_status") : t("users.admin.pending_status") %></td>
-          <td><%= user.admin? ? t("users.admin.admin_role") : t("users.admin.normal_role") %></td>
-        </tr>
+  <ul id="users">
+    <% @users.each do |user| %>
+    <li>
+      <%= link_to user do %>
+      <div class="user-ids">
+        <span class="name"><%= user.name %></span>
+        <span class="email"><%= user.email %></span>
+      </div>
+
+      <div>
+        <span class="status pill <%= user.approved? ? "positive" : "caution" %>">
+          <%= user.approved? ? t("users.admin.approved_status") : t("users.admin.pending_status") %>
+        </span>
+        <span class="role pill"><%= user.admin? ? t("users.admin.admin_role") : t("users.admin.normal_role") %></span>
+      </div>
       <% end %>
-    </tbody>
-  </table>
+    </li>
+    <% end %>
+  </ul>
 </main>

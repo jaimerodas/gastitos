@@ -75,6 +75,12 @@ class TransactionTest < ActiveSupport::TestCase
     assert_equal transactions(:paycheck), txns.last
   end
 
+  test "recently_created scope orders by created_at desc" do
+    txns = Transaction.recently_created
+    dates = txns.map(&:created_at)
+    assert_equal dates, dates.sort.reverse
+  end
+
   # -- Monthly period callbacks --
 
   test "creating a transaction ensures monthly period exists" do

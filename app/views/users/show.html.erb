@@ -1,22 +1,26 @@
-<main>
+<main id="user">
   <h1><%= @user.name %></h1>
+  <span><%= @user.email %></span>
 
   <dl>
-    <dt><%= t("users.admin.email") %></dt>
-    <dd><%= @user.email %></dd>
+    <div>
+      <dt><%= t("users.admin.status") %></dt>
+      <dd><%= @user.approved? ? t("users.admin.approved_status") : t("users.admin.pending_status") %></dd>
+    </div>
 
-    <dt><%= t("users.admin.status") %></dt>
-    <dd><%= @user.approved? ? t("users.admin.approved_status") : t("users.admin.pending_status") %></dd>
+    <div>
+      <dt><%= t("users.admin.permissions") %></dt>
+      <dd><%= @user.admin? ? t("users.admin.admin_role") : t("users.admin.normal_role") %></dd>
+    </div>
 
-    <dt><%= t("users.admin.permissions") %></dt>
-    <dd><%= @user.admin? ? t("users.admin.admin_role") : t("users.admin.normal_role") %></dd>
-
-    <dt><%= t("users.admin.created_at") %></dt>
-    <dd><%= l(@user.created_at.to_date) %></dd>
+    <div>
+      <dt><%= t("users.admin.created_at") %></dt>
+      <dd><%= l(@user.created_at.to_date) %></dd>
+    </div>
   </dl>
 
   <% if @user != current_user %>
-    <section>
+    <section class="actions">
       <% if @user.approved? %>
         <%= button_to t("users.admin.unapprove_button"), user_approval_path(@user), method: :delete %>
       <% else %>

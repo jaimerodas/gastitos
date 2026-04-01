@@ -60,16 +60,16 @@ class UsersAdminTest < ActionDispatch::IntegrationTest
     log_in_as users(:jaime)
     get users_path
 
-    assert_select "table tbody tr", count: User.count
+    assert_select "ul#users li", count: User.count
 
-    assert_select "a", text: "Jaime"
-    assert_select "a", text: "jaime@example.com"
-    assert_select "td", text: I18n.t("users.admin.approved_status")
-    assert_select "td", text: I18n.t("users.admin.admin_role")
+    assert_select ".name", text: "Jaime"
+    assert_select ".email", text: "jaime@example.com"
+    assert_select ".status", text: I18n.t("users.admin.approved_status")
+    assert_select ".role", text: I18n.t("users.admin.admin_role")
 
-    assert_select "a", text: "Pending"
-    assert_select "td", text: I18n.t("users.admin.pending_status")
-    assert_select "td", text: I18n.t("users.admin.normal_role")
+    assert_select ".name", text: "Pending"
+    assert_select ".status", text: I18n.t("users.admin.pending_status")
+    assert_select ".role", text: I18n.t("users.admin.normal_role")
   end
 
   test "index names and emails link to show pages" do
@@ -94,7 +94,7 @@ class UsersAdminTest < ActionDispatch::IntegrationTest
     log_in_as users(:jaime)
     get user_path(users(:sofia))
 
-    assert_select "dd", text: "sofia@example.com"
+    assert_select "main#user span", text: "sofia@example.com"
     assert_select "dd", text: I18n.t("users.admin.approved_status")
     assert_select "dd", text: I18n.t("users.admin.normal_role")
     assert_select "dt", text: I18n.t("users.admin.created_at")

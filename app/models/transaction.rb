@@ -12,6 +12,7 @@ class Transaction < ApplicationRecord
   after_destroy :cleanup_monthly_period
 
   scope :recent, -> { order(date: :desc, created_at: :desc) }
+  scope :recently_created, -> { order(created_at: :desc) }
 
   private
 

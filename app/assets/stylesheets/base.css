@@ -49,9 +49,15 @@ main {
   border: 0.0625rem solid rgb(235,235,235);
 }
 
+.tabular {
+  font-family: ui-monospace;
+}
 .money {
   font-family: ui-monospace;
   text-align: right;
+}
+th.money {
+  font-family: inherit;
 }
 
 h2, h3, h4 {

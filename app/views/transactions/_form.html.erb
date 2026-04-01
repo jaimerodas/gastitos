@@ -31,9 +31,11 @@
       <% end %>
       <fieldset>
         <legend><%= t("transactions.form.date_legend") %></legend>
-        <%= f.date_select :date, order: [ :day, :month, :year ],
-            start_year: Date.current.year - 1, end_year: Date.current.year,
-            prefix: "transaction", field_name: "date" %>
+        <div>
+          <%= f.date_select :date, order: [ :day, :month, :year ],
+          start_year: Date.current.year - 1, end_year: Date.current.year,
+          prefix: "transaction", field_name: "date" %>
+        </div>
       </fieldset>
     <% end %>
 

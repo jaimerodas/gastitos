@@ -61,7 +61,7 @@ class TransactionsController < ApplicationController
   private
 
   def load_index_data
-    @transactions = Transaction.recent.includes(:category, :created_by).limit(10)
+    @transactions = Transaction.recently_created.includes(:category, :created_by).limit(10)
     @categories = Category.order(:name)
 
     year_months = @transactions.map { |t| [ t.date.year, t.date.month ] }.uniq

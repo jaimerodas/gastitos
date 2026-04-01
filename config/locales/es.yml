@@ -83,7 +83,7 @@ es:
       - Noviembre
       - Diciembre
     formats:
-      default: "%-d/%m/%Y"
+      default: "%Y-%m-%d"
       short: "%-d %b"
     order:
       - :day
@@ -142,7 +142,7 @@ es:
       pending_status: Pendiente
       admin_role: Administrador
       normal_role: Normal
-      created_at: Usuario creado
+      created_at: Usuario desde
       approve_button: Aprobar
       unapprove_button: Revocar aprobación
       delete_button: Eliminar usuario
@@ -159,8 +159,8 @@ es:
       cannot_modify_self: No puedes modificar tu propio usuario.
   transactions:
     index:
-      title: Gastitos
-      recent: Transacciones recientes
+      title: Cuánto gasta Valentina?
+      recent: Últimas transacciones creadas
     form:
       new_title: Nueva transacción
       edit_title: Editar transacción
