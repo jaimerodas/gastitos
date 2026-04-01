@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Deploy backup infrastructure and update crontab after each deploy
+# so the schedule stays in sync with the running container.
+
+source .kamal/secrets 2>/dev/null || true
+
+for host in $KAMAL_HOSTS; do
+  echo "Updating backup infrastructure on $host..."
+
+  # Deploy backup script
+  scp bin/backup_db root@$host:/usr/local/bin/gastitos-backup
+  ssh root@$host 'chmod +x /usr/local/bin/gastitos-backup'
+
+  # Install AWS CLI if not present
+  ssh root@$host "bash -s" <<'SETUP'
+    if ! command -v aws &> /dev/null; then
+      echo "Installing AWS CLI..."
+      apt-get update -qq && apt-get install -y -qq unzip > /dev/null
+      curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+      unzip -qo /tmp/awscliv2.zip -d /tmp
+      /tmp/aws/install
+      rm -rf /tmp/awscliv2.zip /tmp/aws
+    fi
+SETUP
+
+  # Write B2 credentials env file
+  ssh root@$host "bash -s" <<CREDENTIALS
+    cat > /etc/gastitos-backup.env <<EOF
+AWS_ACCESS_KEY_ID=${B2_KEY_ID}
+AWS_SECRET_ACCESS_KEY=${B2_APPLICATION_KEY}
+AWS_ENDPOINT_URL=${B2_ENDPOINT}
+B2_BUCKET=${B2_BUCKET}
+EOF
+    chmod 600 /etc/gastitos-backup.env
+CREDENTIALS
+
+  # Install cron job (drop-in file, won't overwrite other apps' cron entries)
+  ssh root@$host 'bash -s' <<'CRON'
+    cat > /etc/cron.d/gastitos-backup <<EOF
+# Gastitos database backup to Backblaze B2 — daily at 4:00 AM CST (10:00 UTC)
+# Managed by Kamal post-deploy hook — do not edit manually
+0 10 * * * root /usr/local/bin/gastitos-backup >> /var/log/gastitos-backup.log 2>&1
+EOF
+    chmod 644 /etc/cron.d/gastitos-backup
+    echo "Cron job installed at /etc/cron.d/gastitos-backup"
+CRON
+done
