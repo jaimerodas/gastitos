@@ -1,0 +1,14 @@
+<main id="login">
+  <h1><%= t("password_resets.new.title") %></h1>
+
+  <%= form_with url: password_resets_path do |f| %>
+    <div class="field">
+      <%= f.label :email, t("password_resets.new.email") %>
+      <%= f.email_field :email, required: true, autofocus: true %>
+    </div>
+
+    <%= f.submit t("password_resets.new.submit") %>
+  <% end %>
+
+  <p><a href="<%= new_session_path %>"><%= t("password_resets.new.back_to_login") %></a></p>
+</main>

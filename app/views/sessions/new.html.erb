@@ -1,9 +1,6 @@
 <main id="login">
   <h1><%= t("sessions.new.title") %></h1>
 
-  <% if flash[:alert] %>
-    <p role="alert"><%= flash[:alert] %></p>
-  <% end %>
 
   <%= form_with url: session_path do |f| %>
     <div class="field">
@@ -19,5 +16,6 @@
     <%= f.submit t("sessions.new.submit") %>
   <% end %>
 
+  <p><a href="<%= new_password_reset_path %>"><%= t("sessions.new.forgot_password") %></a></p>
   <p><a href="<%= new_user_path %>"><%= t("sessions.new.signup_link") %></a></p>
 </main>

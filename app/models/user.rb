@@ -1,5 +1,8 @@
 class User < ApplicationRecord
   has_secure_password
+  generates_token_for :password_reset, expires_in: 2.hours do
+    password_digest
+  end
   has_many :transactions, foreign_key: :created_by_id, dependent: :restrict_with_error
 
   normalizes :email, with: ->(email) { email.strip.downcase }

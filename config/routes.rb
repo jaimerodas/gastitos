@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   root "transactions#index"
 
   resource :session, only: [ :new, :create, :destroy ]
+  resources :password_resets, only: [ :new, :create, :edit, :update ], param: :token
   resources :users, only: [ :new, :create, :index, :show, :destroy ] do
     resource :approval, only: [ :create, :destroy ]
     resource :admin_role, only: [ :create, :destroy ]

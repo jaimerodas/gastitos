@@ -89,12 +89,33 @@ es:
       - :day
       - :month
       - :year
+  user_mailer:
+    password_reset:
+      subject: Restablecer tu contraseña — Gastitos
+  password_resets:
+    new:
+      title: Restablecer contraseña
+      email: Correo electrónico
+      submit: Enviar instrucciones
+      back_to_login: Volver a iniciar sesión
+    create:
+      success: Si tu correo está registrado, recibirás instrucciones para restablecer tu contraseña.
+    edit:
+      title: Nueva contraseña
+      password: Contraseña
+      password_confirmation: Confirmar contraseña
+      submit: Cambiar contraseña
+      errors_title: "No se pudo cambiar la contraseña:"
+    update:
+      success: Tu contraseña ha sido actualizada. Inicia sesión con tu nueva contraseña.
+    invalid_token: El enlace no es válido o ha expirado.
   sessions:
     new:
       title: Iniciar sesión
       email: Correo electrónico
       password: Contraseña
       submit: Iniciar sesión
+      forgot_password: "¿Olvidaste tu contraseña?"
       signup_link: Crear una cuenta
     create:
       unapproved: Tu cuenta aún no ha sido aprobada.
