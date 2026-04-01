@@ -11,7 +11,7 @@
       border-bottom: none;
       margin-bottom: 0.125em;
       &:hover {
-        border-bottom: 0.0625em solid #ccc;
+        border-bottom: 0.0625em solid var(--subsection-border);
         margin-bottom: 0;
       }
     }
@@ -27,16 +27,16 @@
     padding: 0.4375em 0 0.5em;
     margin: 0 0.625em;
     border: 0.0625em solid transparent;
-    border-bottom: 0.0625em solid #ccc;
+    border-bottom: 0.0625em solid var(--table-divider);
 
     &:hover {
-      background: rgb(250,250,250);
+      background: var(--subsection-bg);
       position: relative;
       bottom: 0.0625em;
       padding: 0.5em 0.625em 0.5em;
       margin: 0 0 -0.0625em;
       border-radius: 0.5em;
-      border: 1px solid #ccc; !important
+      border: 1px solid var(--subsection-border);
     }
 
     div {
@@ -56,8 +56,8 @@
     text-transform: uppercase;
     text-align: right;
 
-    &.positive { color: oklch(0.6 0.2 130); }
-    &.caution { color: oklch(0.6 0.2 90); }
+    &.positive { color: var(--positive); }
+    &.caution { color: var(--caution); }
   }
 }
 
@@ -77,41 +77,41 @@
     form:last-child button {
       border-right-color: transparent;
       &:hover {
-        border-right-color: #ccc;
+        border-right-color: var(--subsection-border);
       }
     }
 
     button {
       display: block;
       flex: 1;
-      color: oklch(0.4 0.5 220);
+      color: var(--link-color);
       text-decoration: underline;
 
 
       margin: 0.5em 0;
       padding: 0 0.5em 0 0.4375em;
       border: 0.0625rem solid transparent;
-      border-right-color: #ccc;
+      border-right-color: var(--subsection-border);
       background: transparent;
       cursor: pointer;
 
       &:hover {
-        color: black;
+        color: var(--fg-color);
         text-decoration: none;
 
-        background: rgb(250,250,250);
+        background: var(--subsection-bg);
         border-radius: 0.5em;
         margin: 0 0 0 -0.0625em;
         padding: 0.5em;
-        border: 0.0625rem solid #ccc;
+        border: 0.0625rem solid var(--subsection-border);
       }
     }
   }
   pre {
     padding: 1em;
-    border: 1px solid rgb(230,230,230);
+    border: 1px solid var(--code-border);
     border-radius: 0.5em;
-    background: rgb(250,250,250);
+    background: var(--code-bg);
     font-size: 0.75em;
     text-align: left;
   }

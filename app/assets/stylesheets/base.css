@@ -3,7 +3,8 @@ body {
   font-size: 16px;
   line-height: 1.2;
 
-  background: rgb(245,245,245);
+  color: var(--fg-color);
+  background: var(--bg-color);
   margin: 0;
   padding: 0;
 }
@@ -28,10 +29,10 @@ header {
     font-weight: bold;
     font-size: 0.75em;
     text-transform: uppercase;
-    color: rgb(80,80,80);
+    color: var(--header-color);
 
     &:hover {
-      color: black;
+      color: var(--header-color-hover);
       text-decoration: underline;
       text-decoration-thickness: 0.125em;
     }
@@ -42,11 +43,11 @@ main {
   width: 100%;
   max-width: 40rem;
   margin: 0 auto 2em;
-  background: white;
+  background: var(--main-bg-color);
   padding: 1em;
   box-sizing: border-box;
   border-radius: 1em;
-  border: 0.0625rem solid rgb(235,235,235);
+  border: 0.0625rem solid var(--main-border-color);
 }
 
 .tabular {
@@ -75,7 +76,7 @@ table {
   border-collapse: collapse;
 
   tr:hover td {
-    background: rgb(245,245,245);
+    background: var(--highlight-color);
   }
 
   th {
@@ -87,7 +88,7 @@ table {
   th.section {
     font-size: 1em;
     padding-top: 1em;
-    border-bottom: solid 0.0625em #ccc;
+    border-bottom: solid 0.0625em var(--table-divider);
   }
   tr:first-child th.section {
     padding-top: 0;
@@ -95,112 +96,6 @@ table {
 
   tr.divider td, tr.divider th {
     padding: 0.75rem 0 0.25rem;
-  }
-}
-
-select, button, input {
-  font-family: inherit;
-  font-size: inherit;
-}
-
-input[type=submit] {
-  padding: 0.5em 1em;
-}
-
-#login {
-  .field {
-    margin: 0 0 1em;
-  }
-  label {
-    display: block;
-    margin-bottom: 0.25em;
-  }
-  input[type=text],
-  input[type=email],
-  input[type=password] {
-    font-size: 1.5em;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  input[type=submit] {
-    display: block;
-    font-size: 1.5em;
-  }
-}
-body:has(#login) {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-#add-transaction {
-  background: rgb(250,250,250);
-  border: 1px solid #eee;
-  border-radius: 0.5rem;
-  padding: 0 1em 1em;
-  box-shadow: inset 0 0 0.25em 0.125em rgba(0,0,0,0.02);
-
-  fieldset {
-    border: none;
-    margin: 0;
-    padding: 0;
-  }
-  legend {
-    padding: 0;
-    display: contents;
-  }
-  fieldset, .field {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    height: 2em;
-    margin-bottom: 0.5em;
-    box-sizing: border-box;
-  }
-}
-
-#transactions {
-  a {
-    color: black;
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-}
-
-#months {
-  h2 {
-    color: #999;
-    font-size: 2em;
-    font-weight: 300;
-    font-family: ui-rounded;
-    margin: 1rem 0 0.25rem;
-    border-bottom: 0.125rem solid #ccc;
-  }
-  ul {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0;
-    margin: 0 0 1em;
-    gap: 0.5em;
-  }
-  li {
-    list-style: none;
-  }
-  a {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: black;
-    text-decoration-thickness: 0.125rem;
-    text-decoration-color: #ccc;
-    &:hover {
-      text-decoration-color: black;
-    }
   }
 }
 
@@ -235,15 +130,3 @@ body:has(#login) {
   }
 }
 
-@media screen and (min-width: 45em) {
-  main.double-column {
-    max-width: 60rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 2em;
-    h1 { grid-column: 1 / 3; }
-    #add-transaction { grid-column: 1 / 2; grid-row: 2 / 3; }
-    #monthly-summary { grid-column: 1 / 2; grid-row: 3 / 4;}
-    #transactions { grid-column: 2 / 3; grid-row: 2 / 5; }
-  }
-}

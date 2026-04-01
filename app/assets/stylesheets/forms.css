@@ -1,0 +1,8 @@
+select, button, input {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+input[type=submit] {
+  padding: 0.5em 1em;
+}

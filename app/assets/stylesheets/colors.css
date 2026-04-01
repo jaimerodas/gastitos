@@ -1,0 +1,33 @@
+:root {
+  color-scheme: light dark;
+
+  --bg-color: light-dark(rgb(245,245,245), oklch(0.05 0 0));
+  --fg-color: light-dark(rgb(0,0,0), oklch(1 0 0));
+
+  --secondary-fg-color: light-dark(#999, oklch(0.5 0 0));
+
+  --highlight-color: light-dark(rgb(245,245,245), oklch(0.2 0 0));
+  --link-color: light-dark(oklch(0.4 0.5 220), oklch(0.8 0.8 220));
+
+  --link-underline: light-dark(#ccc, oklch(0.6 0 0));
+  --link-underline-hover: light-dark(oklch(0 0 0), oklch(1 0 0));
+
+  --header-color: light-dark(rgb(80,80,80), oklch(0.65 0 0));
+  --header-color-hover: light-dark(rgb(0,0,0), oklch(1 0 0));
+
+  --main-bg-color: light-dark(rgb(255,255,255), oklch(0.25 0 0));
+  --main-border-color: light-dark(rgb(235,235,235), oklch(0.33 0 0));
+
+  --table-divider: light-dark(#ccc, oklch(0.4 0 0));
+  --table-link: var(--fg-color);
+
+  --subsection-bg: light-dark(rgb(250,250,250), oklch(0.18 0 0));
+  --subsection-border: light-dark(#eee, oklch(0.33 0 0));
+  --subsection-shadow: light-dark(oklch(0 0 0 / 0.02), oklch(0 0 0 / 0.3));
+
+  --code-bg: var(--subsection-bg);
+  --code-border: var(--subsection-border);
+
+  --positive: light-dark(oklch(0.6 0.2 130), oklch(0.8 0.2 130));
+  --caution: light-dark(oklch(0.6 0.2 90), oklch(0.8 0.2 90));
+}

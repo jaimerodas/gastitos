@@ -1,0 +1,36 @@
+#add-transaction {
+  background: var(--subsection-bg);
+  border: 1px solid var(--subsection-border);
+  border-radius: 0.5rem;
+  padding: 0 1em 1em;
+  box-shadow: inset 0 0 0.25em 0.125em var(--subsection-shadow);
+
+  fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  legend {
+    padding: 0;
+    display: contents;
+  }
+  fieldset, .field {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 2em;
+    margin-bottom: 0.5em;
+    box-sizing: border-box;
+  }
+}
+
+#transactions {
+  a {
+    color: var(--table-link);
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
