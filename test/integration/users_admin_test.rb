@@ -128,7 +128,7 @@ class UsersAdminTest < ActionDispatch::IntegrationTest
     log_in_as users(:jaime)
     get user_path(users(:jaime))
 
-    assert_select "section", count: 0
+    assert_select "section.actions", count: 0
   end
 
   # === Approve ===

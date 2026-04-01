@@ -4,6 +4,7 @@ class PasswordResetsController < ApplicationController
 
   def create
     if (user = User.find_by(email: params[:email]))
+      ActivityLogger.log_password_reset_requested(user)
       UserMailer.password_reset(user).deliver_later
     end
 
@@ -27,6 +28,7 @@ class PasswordResetsController < ApplicationController
     end
 
     if @user.update(password_params)
+      ActivityLogger.log_password_reset_completed(@user)
       redirect_to new_session_path, notice: t("password_resets.update.success")
     else
       render :edit, status: :unprocessable_entity

@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   resources :users, only: [ :new, :create, :index, :show, :destroy ] do
     resource :approval, only: [ :create, :destroy ]
     resource :role, only: [ :update ]
+    get :activity_log, on: :member
   end
   resources :transactions, only: [ :create, :edit, :update, :destroy ]
   resources :categories, only: [ :create ]

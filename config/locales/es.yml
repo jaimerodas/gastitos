@@ -157,6 +157,9 @@ es:
       destroyed: Usuario eliminado.
       destroy_failed: No se puede eliminar un usuario que tiene transacciones.
       cannot_modify_self: No puedes modificar tu propio usuario.
+      activity_title: Actividad reciente
+      no_activity: Sin actividad registrada.
+      download_log: Descargar registro completo
   transactions:
     index:
       title: Cuánto gasta Valentina?

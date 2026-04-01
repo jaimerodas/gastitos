@@ -35,5 +35,15 @@
     </section>
   <% end %>
 
+  <section id="activity">
+    <h2><%= t("users.admin.activity_title") %></h2>
+    <% if @activity_lines.any? %>
+      <pre><%= @activity_lines.join("\n") %></pre>
+      <p><%= link_to t("users.admin.download_log"), activity_log_user_path(@user) %></p>
+    <% else %>
+      <p><%= t("users.admin.no_activity") %></p>
+    <% end %>
+  </section>
+
   <p><%= link_to t("users.admin.back"), users_path %></p>
 </main>

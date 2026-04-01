@@ -1,13 +1,24 @@
 class UsersController < ApplicationController
-  before_action :require_login, only: [ :index, :show, :destroy ]
-  before_action :require_admin, only: [ :index, :show, :destroy ]
-  before_action :set_user, only: [ :show, :destroy ]
+  before_action :require_login, only: [ :index, :show, :destroy, :activity_log ]
+  before_action :require_admin, only: [ :index, :show, :destroy, :activity_log ]
+  before_action :set_user, only: [ :show, :destroy, :activity_log ]
 
   def index
     @users = User.order(:name)
   end
 
   def show
+    @activity_lines = ActivityLogger.recent_lines(@user)
+  end
+
+  def activity_log
+    path = ActivityLogger.log_path(@user)
+
+    if path.exist?
+      send_file path, type: "text/plain", filename: "actividad_#{@user.name.parameterize}.log"
+    else
+      redirect_to user_path(@user), alert: t("users.admin.no_activity")
+    end
   end
 
   def new
