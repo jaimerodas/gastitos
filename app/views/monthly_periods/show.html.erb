@@ -1,15 +1,17 @@
-<main class="double-column">
+<main <% if current_user.can_edit? %> class="double-column"<% end %>>
   <h1><%= @period.display_name %></h1>
 
-  <%= render "transactions/form", transaction: @transaction, categories: @categories,
-      period: @period %>
+  <% if current_user.can_edit? %>
+    <%= render "transactions/form", transaction: @transaction, categories: @categories,
+        period: @period %>
+  <% end %>
 
   <section id="monthly-summary">
     <h2><%= t("monthly_periods.show.pnl_title") %></h2>
     <table>
       <tbody>
         <tr>
-          <td><a href="<%= edit_monthly_period_path(@period) %>"><%= t("monthly_periods.show.starting_balance") %></a></td>
+          <td><% if current_user.can_edit? %><a href="<%= edit_monthly_period_path(@period) %>"><%= t("monthly_periods.show.starting_balance") %></a><% else %><%= t("monthly_periods.show.starting_balance") %><% end %></td>
           <td class="money"><%= number_to_currency(@period.starting_balance) %></td>
         </tr>
 
@@ -75,9 +77,13 @@
             <% txns.each do |txn| %>
             <tr>
               <td>
-                <a href="<%= edit_transaction_path(txn, return_to: monthly_period_path(@period)) %>">
+                <% if current_user.can_edit? %>
+                  <a href="<%= edit_transaction_path(txn, return_to: monthly_period_path(@period)) %>">
+                    <%= txn.category.name %><% if txn.description.present? %>: <%= txn.description %><% end %>
+                  </a>
+                <% else %>
                   <%= txn.category.name %><% if txn.description.present? %>: <%= txn.description %><% end %>
-                </a>
+                <% end %>
               </td>
               <td class="money"><%= number_to_currency(txn.amount) %></td>
             </tr>

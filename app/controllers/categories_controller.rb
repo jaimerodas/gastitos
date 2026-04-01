@@ -1,5 +1,6 @@
 class CategoriesController < ApplicationController
   before_action :require_login
+  before_action :require_editor
 
   def create
     @category = Category.new(category_params)

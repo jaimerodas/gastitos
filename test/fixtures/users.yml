@@ -2,19 +2,26 @@ jaime:
   name: Jaime
   email: jaime@example.com
   password_digest: <%= BCrypt::Password.create("password123") %>
-  admin: true
+  role: admin
   approved: true
 
 sofia:
   name: Sofía
   email: sofia@example.com
   password_digest: <%= BCrypt::Password.create("password123") %>
-  admin: false
+  role: editor
+  approved: true
+
+viewer:
+  name: Lector
+  email: lector@example.com
+  password_digest: <%= BCrypt::Password.create("password123") %>
+  role: viewer
   approved: true
 
 unapproved:
   name: Pending
   email: pending@example.com
   password_digest: <%= BCrypt::Password.create("password123") %>
-  admin: false
+  role: viewer
   approved: false

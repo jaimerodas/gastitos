@@ -5,20 +5,25 @@ class User < ApplicationRecord
   end
   has_many :transactions, foreign_key: :created_by_id, dependent: :restrict_with_error
 
+  enum :role, { viewer: "viewer", editor: "editor", admin: "admin" }
+
   normalizes :email, with: ->(email) { email.strip.downcase }
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 8 }, allow_nil: true
-
   before_create :auto_approve_first_user
+
+  def can_edit?
+    editor? || admin?
+  end
 
   private
 
   def auto_approve_first_user
     return if User.exists?
 
-    self.admin = true
+    self.role = "admin"
     self.approved = true
   end
 end

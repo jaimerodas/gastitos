@@ -32,11 +32,11 @@ class UsersAdminTest < ActionDispatch::IntegrationTest
     assert_not users(:unapproved).reload.approved?
   end
 
-  test "non-admin user cannot grant admin" do
+  test "non-admin user cannot change roles" do
     log_in_as users(:sofia)
-    post user_admin_role_path(users(:unapproved))
+    patch user_role_path(users(:unapproved)), params: { role: "editor" }
     assert_redirected_to root_path
-    assert_not users(:unapproved).reload.admin?
+    assert users(:unapproved).reload.viewer?
   end
 
   test "non-admin user cannot delete" do
@@ -69,7 +69,7 @@ class UsersAdminTest < ActionDispatch::IntegrationTest
 
     assert_select ".name", text: "Pending"
     assert_select ".status", text: I18n.t("users.admin.pending_status")
-    assert_select ".role", text: I18n.t("users.admin.normal_role")
+    assert_select ".role", text: I18n.t("users.admin.viewer_role")
   end
 
   test "index names and emails link to show pages" do
@@ -96,7 +96,7 @@ class UsersAdminTest < ActionDispatch::IntegrationTest
 
     assert_select "main#user span", text: "sofia@example.com"
     assert_select "dd", text: I18n.t("users.admin.approved_status")
-    assert_select "dd", text: I18n.t("users.admin.normal_role")
+    assert_select "dd", text: I18n.t("users.admin.editor_role")
     assert_select "dt", text: I18n.t("users.admin.created_at")
   end
 
@@ -115,11 +115,13 @@ class UsersAdminTest < ActionDispatch::IntegrationTest
     assert_select "button", text: I18n.t("users.admin.unapprove_button")
   end
 
-  test "show page for non-admin user has grant admin button" do
+  test "show page shows role change buttons for other roles" do
     log_in_as users(:jaime)
     get user_path(users(:sofia))
 
-    assert_select "button", text: I18n.t("users.admin.grant_admin_button")
+    # Sofia is editor, so should see buttons for viewer and admin
+    assert_select "button", text: I18n.t("users.admin.make_role", role: I18n.t("users.admin.viewer_role").downcase)
+    assert_select "button", text: I18n.t("users.admin.make_role", role: I18n.t("users.admin.admin_role").downcase)
   end
 
   test "show page for own user has no action buttons" do
@@ -153,29 +155,36 @@ class UsersAdminTest < ActionDispatch::IntegrationTest
     assert_select "p[role=status]", I18n.t("users.admin.unapproved")
   end
 
-  # === Grant admin ===
+  # === Role changes ===
 
-  test "admin can grant admin role" do
+  test "admin can change user role to admin" do
     log_in_as users(:jaime)
-    post user_admin_role_path(users(:sofia))
+    patch user_role_path(users(:sofia)), params: { role: "admin" }
 
     assert users(:sofia).reload.admin?
     assert_redirected_to user_path(users(:sofia))
     follow_redirect!
-    assert_select "p[role=status]", I18n.t("users.admin.admin_granted")
+    assert_select "p[role=status]", I18n.t("users.admin.role_updated")
   end
 
-  # === Revoke admin ===
-
-  test "admin can revoke admin role" do
-    users(:sofia).update!(admin: true)
+  test "admin can change user role to viewer" do
     log_in_as users(:jaime)
-    delete user_admin_role_path(users(:sofia))
+    patch user_role_path(users(:sofia)), params: { role: "viewer" }
 
-    assert_not users(:sofia).reload.admin?
+    assert users(:sofia).reload.viewer?
     assert_redirected_to user_path(users(:sofia))
     follow_redirect!
-    assert_select "p[role=status]", I18n.t("users.admin.admin_revoked")
+    assert_select "p[role=status]", I18n.t("users.admin.role_updated")
+  end
+
+  test "admin cannot set invalid role" do
+    log_in_as users(:jaime)
+    patch user_role_path(users(:sofia)), params: { role: "superadmin" }
+
+    assert users(:sofia).reload.editor?
+    assert_redirected_to user_path(users(:sofia))
+    follow_redirect!
+    assert_select "p[role=alert]", I18n.t("users.admin.invalid_role")
   end
 
   # === Self-protection ===
@@ -199,9 +208,9 @@ class UsersAdminTest < ActionDispatch::IntegrationTest
     assert_select "p[role=alert]", I18n.t("users.admin.cannot_modify_self")
   end
 
-  test "admin cannot change own admin status" do
+  test "admin cannot change own role" do
     log_in_as users(:jaime)
-    delete user_admin_role_path(users(:jaime))
+    patch user_role_path(users(:jaime)), params: { role: "viewer" }
 
     assert users(:jaime).reload.admin?
     assert_redirected_to user_path(users(:jaime))
@@ -256,8 +265,6 @@ class UsersAdminTest < ActionDispatch::IntegrationTest
 
     # Sofia's next request should redirect to login
     reset!
-    # Simulate Sofia's session by logging in before approval was revoked
-    # Since approval is already revoked, we set session directly
     get root_path
     assert_redirected_to new_session_path
   end

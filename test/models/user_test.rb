@@ -55,5 +55,29 @@ class UserTest < ActiveSupport::TestCase
     user = User.create!(name: "New", email: "new@example.com", password: "password123")
     assert_not user.admin?
     assert_not user.approved?
+    assert user.viewer?
+  end
+
+  test "can_edit? returns true for editor" do
+    assert users(:sofia).can_edit?
+  end
+
+  test "can_edit? returns true for admin" do
+    assert users(:jaime).can_edit?
+  end
+
+  test "can_edit? returns false for viewer" do
+    assert_not users(:viewer).can_edit?
+  end
+
+  test "role defaults to viewer" do
+    user = User.new(name: "Test", email: "test@example.com", password: "password123")
+    assert user.viewer?
+  end
+
+  test "rejects invalid role" do
+    assert_raises(ArgumentError) do
+      User.new(name: "Test", email: "test@example.com", password: "password123", role: "superadmin")
+    end
   end
 end

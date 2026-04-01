@@ -1,5 +1,6 @@
 class TransactionsController < ApplicationController
   before_action :require_login
+  before_action :require_editor, only: [ :create, :edit, :update, :destroy ]
 
   def index
     @transaction = Transaction.new(date: Date.current)

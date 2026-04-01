@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   resources :password_resets, only: [ :new, :create, :edit, :update ], param: :token
   resources :users, only: [ :new, :create, :index, :show, :destroy ] do
     resource :approval, only: [ :create, :destroy ]
-    resource :admin_role, only: [ :create, :destroy ]
+    resource :role, only: [ :update ]
   end
   resources :transactions, only: [ :create, :edit, :update, :destroy ]
   resources :categories, only: [ :create ]

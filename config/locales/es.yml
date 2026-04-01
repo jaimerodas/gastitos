@@ -140,20 +140,20 @@ es:
       permissions: Permisos
       approved_status: Aprobado
       pending_status: Pendiente
+      viewer_role: Lector
+      editor_role: Editor
       admin_role: Administrador
-      normal_role: Normal
       created_at: Usuario desde
       approve_button: Aprobar
       unapprove_button: Revocar aprobación
       delete_button: Eliminar usuario
       confirm_delete: "¿Estás seguro de que quieres eliminar este usuario?"
-      grant_admin_button: Hacer administrador
-      revoke_admin_button: Quitar administrador
+      make_role: "Hacer %{role}"
       back: Volver a usuarios
       approved: Usuario aprobado.
       unapproved: Aprobación revocada.
-      admin_granted: Permisos de administrador otorgados.
-      admin_revoked: Permisos de administrador revocados.
+      role_updated: Rol actualizado.
+      invalid_role: Rol no válido.
       destroyed: Usuario eliminado.
       destroy_failed: No se puede eliminar un usuario que tiene transacciones.
       cannot_modify_self: No puedes modificar tu propio usuario.

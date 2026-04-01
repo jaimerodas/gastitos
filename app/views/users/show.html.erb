@@ -10,7 +10,7 @@
 
     <div>
       <dt><%= t("users.admin.permissions") %></dt>
-      <dd><%= @user.admin? ? t("users.admin.admin_role") : t("users.admin.normal_role") %></dd>
+      <dd><%= t("users.admin.#{@user.role}_role") %></dd>
     </div>
 
     <div>
@@ -28,10 +28,9 @@
         <%= button_to t("users.admin.delete_button"), user_path(@user), method: :delete, data: { turbo_confirm: t("users.admin.confirm_delete") } %>
       <% end %>
 
-      <% if @user.admin? %>
-        <%= button_to t("users.admin.revoke_admin_button"), user_admin_role_path(@user), method: :delete %>
-      <% else %>
-        <%= button_to t("users.admin.grant_admin_button"), user_admin_role_path(@user), method: :post %>
+      <% User.roles.each_key do |role| %>
+        <% next if role == @user.role %>
+        <%= button_to t("users.admin.make_role", role: t("users.admin.#{role}_role").downcase), user_role_path(@user), method: :patch, params: { role: role } %>
       <% end %>
     </section>
   <% end %>

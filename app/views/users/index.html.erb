@@ -14,7 +14,7 @@
         <span class="status pill <%= user.approved? ? "positive" : "caution" %>">
           <%= user.approved? ? t("users.admin.approved_status") : t("users.admin.pending_status") %>
         </span>
-        <span class="role pill"><%= user.admin? ? t("users.admin.admin_role") : t("users.admin.normal_role") %></span>
+        <span class="role pill"><%= t("users.admin.#{user.role}_role") %></span>
       </div>
       <% end %>
     </li>

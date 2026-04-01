@@ -1,7 +1,9 @@
 <main>
   <h1><%= t("transactions.index.title") %></h1>
 
-  <%= render "form", transaction: @transaction, categories: @categories %>
+  <% if current_user.can_edit? %>
+    <%= render "form", transaction: @transaction, categories: @categories %>
+  <% end %>
 
   <% if @transactions.any? %>
     <section id="transactions">
@@ -19,9 +21,13 @@
             <tr>
               <td class="tabular"><% period = @periods_by_month[[txn.date.year, txn.date.month]] %><% if period %><a href="<%= monthly_period_path(period) %>"><%= txn.date.strftime("%Y-%m") %></a>-<%= "%02d" % txn.date.day %><% else %><%= txn.date.strftime("%Y-%m-%d") %><% end %></td>
               <td>
-                <a href="<%= edit_transaction_path(txn) %>">
+                <% if current_user.can_edit? %>
+                  <a href="<%= edit_transaction_path(txn) %>">
+                    <%= txn.category.name %><% if txn.description.present? %>: <%= txn.description %><% end %>
+                  </a>
+                <% else %>
                   <%= txn.category.name %><% if txn.description.present? %>: <%= txn.description %><% end %>
-                </a>
+                <% end %>
               </td>
               <td class="money"><%= number_to_currency(txn.amount) %></td>
             </tr>

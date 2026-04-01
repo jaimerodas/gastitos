@@ -22,7 +22,7 @@ bin/rails server        # Start dev server
 
 ### Models
 
-- **User** — name, email, password_digest, admin, approved. First user is auto-admin + auto-approved. Subsequent users need admin approval.
+- **User** — name, email, password_digest, role (enum: viewer/editor/admin), approved. First user is auto-admin + auto-approved. Subsequent users need admin approval and default to viewer role. Viewers can only read; editors can create/edit/delete transactions.
 - **Category** — name (unique), category_type ("expense" or "income"). Shared across all users.
 - **Transaction** — amount (signed decimal: negative=expense, positive=income), date, description (optional, max 140 chars), belongs_to category + created_by (User). Amount sign is auto-applied from category type via `before_validation`. Callbacks manage MonthlyPeriod lifecycle.
 - **MonthlyPeriod** — month, year, starting_balance. Auto-created on first transaction for a month, auto-deleted when last transaction is removed. No FK from transactions — relationship is derived from date range. Starting balance defaults to previous period's ending balance.

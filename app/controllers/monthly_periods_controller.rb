@@ -1,5 +1,6 @@
 class MonthlyPeriodsController < ApplicationController
   before_action :require_login
+  before_action :require_editor, only: [ :edit, :update ]
 
   def index
     @periods = MonthlyPeriod.chronological
