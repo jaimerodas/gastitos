@@ -5,4 +5,5 @@
 set -e
 trap 'prove_it record --name full-tests --result $?' EXIT
 bundle exec rubocop --no-server
+bundle exec brakeman --no-pager -q
 bin/rails test

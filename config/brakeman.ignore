@@ -1,0 +1,10 @@
+{
+  "ignored_warnings": [
+    {
+      "fingerprint": "3ab93fe944255ad19f417533c31c1d1a03965ecd19f212f30642660c2ffde19d",
+      "note": "Path is constructed from integer user.id, admin-only action"
+    }
+  ],
+  "updated": "2026-04-01",
+  "brakeman_version": "8.0.4"
+}
