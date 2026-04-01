@@ -69,25 +69,6 @@
     margin: 0;
   }
 
-  dl {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0.5em;
-    max-width: 30em;
-    margin: 1em auto;
-  }
-
-  dt {
-    margin: 0;
-    font-size: 0.75em;
-    font-family: ui-rounded;
-    text-transform: uppercase;
-  }
-  dd {
-    margin: 0;
-    font-weight: bold;
-  }
-
   .actions {
     display: flex;
     justify-content: center;

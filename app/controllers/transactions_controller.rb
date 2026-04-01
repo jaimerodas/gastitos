@@ -62,6 +62,7 @@ class TransactionsController < ApplicationController
   private
 
   def load_index_data
+    @stats = TransactionStats.new
     @transactions = Transaction.recently_created.includes(:category, :created_by).limit(10)
     @categories = Category.order(:name)
 

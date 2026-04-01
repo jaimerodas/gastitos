@@ -204,6 +204,37 @@ body:has(#login) {
   }
 }
 
+.stats {
+  display: flex;
+  text-align: center;
+  gap: 1em;
+  margin: 1em auto;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  & > div {
+    flex: 1 1 10em;
+  }
+
+  dt {
+    margin: 0;
+    font-size: 0.75em;
+    font-family: ui-rounded;
+    text-transform: uppercase;
+  }
+  dd {
+    margin: 0;
+    font-weight: bold;
+    &.big {
+      font-size: 1.5em;
+    }
+  }
+  ol {
+    padding: 0;
+    list-style: inside decimal;
+  }
+}
+
 @media screen and (min-width: 45em) {
   main.double-column {
     max-width: 60rem;

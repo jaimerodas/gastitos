@@ -26,6 +26,21 @@ class TransactionsTest < ActionDispatch::IntegrationTest
     assert_select "td a[href='#{monthly_period_path(period)}']", txn.date.strftime("%Y-%m")
   end
 
+  test "index shows stats section when expense transactions exist" do
+    get root_path
+    assert_select "section#stats"
+    assert_select "section#stats h2", "Estadísticas"
+    assert_select "section#stats dt", "Gasto promedio mensual"
+    assert_select "section#stats dt", "Gasto total"
+    assert_select "section#stats dt", "En qué gasto más?"
+  end
+
+  test "index hides stats section when no expense transactions exist" do
+    Transaction.where("amount < 0").delete_all
+    get root_path
+    assert_select "section#stats", count: 0
+  end
+
   test "index shows no table when there are no transactions" do
     Transaction.delete_all
     get root_path

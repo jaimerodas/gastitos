@@ -5,6 +5,36 @@
     <%= render "form", transaction: @transaction, categories: @categories %>
   <% end %>
 
+  <% if @stats.any? %>
+    <section id="stats">
+      <h2><%= t("transactions.index.stats_title") %></h2>
+      <dl class="stats">
+        <div>
+          <dt><%= t("transactions.index.average_monthly") %></dt>
+          <dd class="big"><%= number_to_currency(@stats.average_monthly_spend) %></dd>
+        </div>
+
+        <div>
+          <dt><%= t("transactions.index.total_spend") %></dt>
+          <dd class="big"><%= number_to_currency(@stats.total_spend) %></dd>
+        </div>
+
+        <% if @stats.top_categories.any? %>
+        <div>
+          <dt><%= t("transactions.index.top_categories") %></dt>
+          <dd>
+            <ol>
+              <% @stats.top_categories.each do |cat| %>
+                <li><%= cat[:name] %>: <%= number_to_currency(cat[:total]) %></li>
+              <% end %>
+            </ol>
+          </dd>
+        </div>
+        <% end %>
+      </dl>
+    </section>
+  <% end %>
+
   <% if @transactions.any? %>
     <section id="transactions">
       <h2><%= t("transactions.index.recent") %></h2>

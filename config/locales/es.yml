@@ -160,6 +160,10 @@ es:
   transactions:
     index:
       title: Cuánto gasta Valentina?
+      stats_title: Estadísticas
+      average_monthly: Gasto promedio mensual
+      total_spend: Gasto total
+      top_categories: En qué gasto más?
       recent: Últimas transacciones creadas
     form:
       new_title: Nueva transacción

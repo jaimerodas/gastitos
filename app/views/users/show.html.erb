@@ -2,7 +2,7 @@
   <h1><%= @user.name %></h1>
   <span><%= @user.email %></span>
 
-  <dl>
+  <dl class="stats">
     <div>
       <dt><%= t("users.admin.status") %></dt>
       <dd><%= @user.approved? ? t("users.admin.approved_status") : t("users.admin.pending_status") %></dd>
