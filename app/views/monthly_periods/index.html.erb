@@ -3,7 +3,7 @@
 
   <% @periods.group_by {|p| p.year }.each do |year, periods| %>
   <h2><%= year %></h2>
-  <ul>
+  <ul class="inline-actions">
     <% periods.each do |period| %>
       <li>
         <a href="<%= monthly_period_path(period) %>"><%= period.display_month %></a>

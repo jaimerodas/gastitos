@@ -70,42 +70,7 @@
   }
 
   .actions {
-    display: flex;
     justify-content: center;
-    gap: 0;
-
-    form:last-child button {
-      border-right-color: transparent;
-      &:hover {
-        border-right-color: var(--subsection-border);
-      }
-    }
-
-    button {
-      display: block;
-      flex: 1;
-      color: var(--link-color);
-      text-decoration: underline;
-
-
-      margin: 0.5em 0;
-      padding: 0 0.5em 0 0.4375em;
-      border: 0.0625rem solid transparent;
-      border-right-color: var(--subsection-border);
-      background: transparent;
-      cursor: pointer;
-
-      &:hover {
-        color: var(--fg-color);
-        text-decoration: none;
-
-        background: var(--subsection-bg);
-        border-radius: 0.5em;
-        margin: 0 0 0 -0.0625em;
-        padding: 0.5em;
-        border: 0.0625rem solid var(--subsection-border);
-      }
-    }
   }
   pre {
     padding: 1em;

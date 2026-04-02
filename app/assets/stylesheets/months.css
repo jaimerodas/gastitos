@@ -4,28 +4,15 @@
     font-size: 2em;
     font-weight: 300;
     font-family: ui-rounded;
-    margin: 1rem 0 0.25rem;
+    margin: 1rem 0.5rem 0.25rem;
     border-bottom: 0.125rem solid var(--table-divider);
   }
   ul {
-    display: flex;
-    flex-wrap: wrap;
     padding: 0;
     margin: 0 0 1em;
-    gap: 0.5em;
   }
   li {
     list-style: none;
-  }
-  a {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: var(--table-link);
-    text-decoration-thickness: 0.125rem;
-    text-decoration-color: var(--link-underline);
-    &:hover {
-      text-decoration-color: var(--link-underline-hover);
-    }
   }
 }
 
