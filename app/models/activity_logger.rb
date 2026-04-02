@@ -27,7 +27,8 @@ class ActivityLogger
 
     def log_transaction_created(user, transaction)
       type = transaction_type(transaction)
-      log(user, "Creó #{type}: #{format_amount(transaction)} en #{transaction.category.name} el #{transaction.date} — \"#{transaction.description}\" (ID: #{transaction.id})")
+      description = transaction.description.present? ? "#{transaction.category.name}: #{transaction.description}" : transaction.category.name
+      log(user, "Creó #{type}: #{format_amount(transaction)} en #{description} el #{transaction.date} (ID: #{transaction.id})")
     end
 
     def log_transaction_updated(user, transaction, changes)
@@ -38,7 +39,8 @@ class ActivityLogger
 
     def log_transaction_destroyed(user, transaction)
       type = transaction_type(transaction)
-      log(user, "Eliminó #{type}: #{format_amount(transaction)} en #{transaction.category.name} del #{transaction.date} — \"#{transaction.description}\" (ID: #{transaction.id})")
+      description = transaction.description.present? ? "#{transaction.category.name}: #{transaction.description}" : transaction.category.name
+      log(user, "Eliminó #{type}: #{format_amount(transaction)} en #{description} del #{transaction.date} (ID: #{transaction.id})")
     end
 
     def log_login(user)
