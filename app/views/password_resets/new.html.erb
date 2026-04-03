@@ -3,7 +3,7 @@
 
   <%= form_with url: password_resets_path do |f| %>
     <div class="field">
-      <%= f.label :email, t("password_resets.new.email") %>
+      <%= f.label :email, User.human_attribute_name(:email) %>
       <%= f.email_field :email, required: true, autofocus: true %>
     </div>
 

@@ -4,12 +4,12 @@
 
   <%= form_with url: session_path do |f| %>
     <div class="field">
-      <%= f.label :email, t("sessions.new.email") %>
+      <%= f.label :email, User.human_attribute_name(:email) %>
       <%= f.email_field :email, required: true, autofocus: true %>
     </div>
 
     <div class="field">
-      <%= f.label :password, t("sessions.new.password") %>
+      <%= f.label :password, User.human_attribute_name(:password) %>
       <%= f.password_field :password, required: true %>
     </div>
 

@@ -11,14 +11,16 @@ Rails.application.routes.draw do
 
   root "transactions#index"
 
-  resource :session, only: [ :new, :create, :destroy ]
-  resources :password_resets, only: [ :new, :create, :edit, :update ], param: :token
-  resources :users, only: [ :new, :create, :index, :show, :destroy ] do
-    resource :approval, only: [ :create, :destroy ]
-    resource :role, only: [ :update ]
-    get :activity_log, on: :member
+  scope path_names: { new: "crear", edit: "editar" } do
+    resource :session, only: [ :new, :create, :destroy ], path: "sesion"
+    resources :password_resets, only: [ :new, :create, :edit, :update ], param: :token, path: "restablecer"
+    resources :users, only: [ :new, :create, :index, :show, :destroy ], path: "usuarios" do
+      resource :approval, only: [ :create, :destroy ], path: "aprobacion"
+      resource :role, only: [ :update ], path: "rol"
+      get :activity_log, on: :member, path: "actividad"
+    end
+    resources :transactions, only: [ :create, :edit, :update, :destroy ], path: "transacciones"
+    resources :categories, only: [ :create ], path: "categorias"
+    resources :monthly_periods, only: [ :index, :show, :edit, :update ], path: "meses"
   end
-  resources :transactions, only: [ :create, :edit, :update, :destroy ]
-  resources :categories, only: [ :create ]
-  resources :monthly_periods, only: [ :index, :show, :edit, :update ], path: "meses"
 end

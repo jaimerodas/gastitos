@@ -41,9 +41,9 @@
       <table>
         <thead>
           <tr>
-            <th width="110"><%= t("transactions.table.date") %></th>
-            <th><%= t("transactions.table.category") %></th>
-            <th class="money"><%= t("transactions.table.amount") %></th>
+            <th width="110"><%= Transaction.human_attribute_name(:date) %></th>
+            <th><%= Transaction.human_attribute_name(:category) %></th>
+            <th class="money"><%= Transaction.human_attribute_name(:amount) %></th>
           </tr>
         </thead>
         <tbody>

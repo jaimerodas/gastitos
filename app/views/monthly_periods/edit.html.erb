@@ -3,7 +3,7 @@
 
   <%= form_with model: @period, url: monthly_period_path(@period) do |f| %>
     <div>
-      <%= f.label :starting_balance, t("monthly_periods.edit.starting_balance") %>
+      <%= f.label :starting_balance %>
       <%= f.number_field :starting_balance, step: 0.01 %>
     </div>
 

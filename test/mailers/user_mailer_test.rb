@@ -13,7 +13,7 @@ class UserMailerTest < ActionMailer::TestCase
     user = users(:jaime)
     email = UserMailer.password_reset(user)
 
-    assert_match "password_resets", email.body.encoded
+    assert_match "restablecer", email.body.encoded
     assert_match user.name, email.body.encoded
   end
 end

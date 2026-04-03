@@ -1,11 +1,11 @@
 <fieldset data-category-select-target="newForm">
   <legend><%= t("categories.form.title") %></legend>
   <div>
-    <label for="category_name"><%= t("categories.form.name") %></label>
+    <label for="category_name"><%= Category.human_attribute_name(:name) %></label>
     <input type="text" name="category[name]" id="category_name" required>
   </div>
   <div>
-    <label for="category_category_type"><%= t("categories.form.type") %></label>
+    <label for="category_category_type"><%= Category.human_attribute_name(:category_type) %></label>
     <select name="category[category_type]" id="category_category_type" required>
       <option value="expense"><%= t("categories.form.expense") %></option>
       <option value="income"><%= t("categories.form.income") %></option>
