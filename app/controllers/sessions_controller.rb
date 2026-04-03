@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  rate_limit to: 5, within: 20.seconds, only: :create
+
   def new
     redirect_to new_user_path unless User.exists?
   end

@@ -15,6 +15,10 @@ module ActiveSupport
 end
 
 class ActionDispatch::IntegrationTest
+  setup do
+    ActionController::Base.cache_store.clear
+  end
+
   def log_in_as(user)
     post session_path, params: { email: user.email, password: "password123" }
   end

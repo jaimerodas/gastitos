@@ -22,6 +22,9 @@ Rails.application.configure do
   config.consider_all_requests_local = true
   config.cache_store = :null_store
 
+  # Use a real cache store for rate limiting (rate_limit captures the store at class load time)
+  config.action_controller.cache_store = :memory_store
+
   # Render exception templates for rescuable exceptions and raise for other exceptions.
   config.action_dispatch.show_exceptions = :rescuable
 
