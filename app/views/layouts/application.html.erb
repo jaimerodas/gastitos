@@ -27,12 +27,15 @@
     <% if current_user %>
       <header>
         <nav>
-          <a href="<%= root_path %>">Inicio</a>
+          <a class="logo" href="<%= root_path %>" aria-label="Gastitos" <%= 'aria-current="page"'.html_safe if current_page?(root_path) %>>
+            <%= render "shared/logo" %>
+            <span>Gastitos</span>
+          </a>
           <% if MonthlyPeriod.exists? %>
-            <a href="<%= monthly_periods_path %>"><%= t("layouts.application.months") %></a>
+            <a href="<%= monthly_periods_path %>" <%= 'aria-current="page"'.html_safe if request.path.start_with?("/meses") %>><%= t("layouts.application.months") %></a>
           <% end %>
           <% if current_user.admin? && User.count > 1 %>
-            <a href="<%= users_path %>"><%= t("layouts.application.users") %></a>
+            <a href="<%= users_path %>" <%= 'aria-current="page"'.html_safe if request.path.start_with?("/users") %>><%= t("layouts.application.users") %></a>
           <% end %>
           <form action="<%= session_path %>" method="post">
             <input type="hidden" name="_method" value="delete">
@@ -44,10 +47,10 @@
     <% end %>
 
     <% if flash[:notice] %>
-      <p role="status"><%= flash[:notice] %></p>
+      <p class="flash flash--notice" role="status"><%= flash[:notice] %></p>
     <% end %>
     <% if flash[:alert] %>
-      <p role="alert"><%= flash[:alert] %></p>
+      <p class="flash flash--alert" role="alert"><%= flash[:alert] %></p>
     <% end %>
 
     <%= yield %>
