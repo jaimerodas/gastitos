@@ -20,7 +20,7 @@
   </dl>
 
   <% if @user != current_user %>
-    <section class="actions inline-actions">
+    <section class="actions">
       <% if @user.approved? %>
         <%= button_to t("users.admin.unapprove_button"), user_approval_path(@user), method: :delete %>
       <% else %>

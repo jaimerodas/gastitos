@@ -157,6 +157,7 @@ es:
       total_spend: Gasto total
       top_categories: En qué gasto más?
       recent: Últimas transacciones creadas
+      empty_state: "¡Aún no hay transacciones! Añade la primera arriba."
     form:
       new_title: Nueva transacción
       edit_title: Editar transacción

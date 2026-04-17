@@ -35,9 +35,9 @@
     </section>
   <% end %>
 
-  <% if @transactions.any? %>
-    <section id="transactions">
-      <h2><%= t("transactions.index.recent") %></h2>
+  <section id="transactions">
+    <h2><%= t("transactions.index.recent") %></h2>
+    <% if @transactions.any? %>
       <table>
         <thead>
           <tr>
@@ -59,11 +59,13 @@
                   <%= txn.category.name %><% if txn.description.present? %>: <%= txn.description %><% end %>
                 <% end %>
               </td>
-              <td class="money"><%= number_to_currency(txn.amount) %></td>
+              <td class="money <%= txn.amount.negative? ? "amount-expense" : "amount-income" %>"><%= number_to_currency(txn.amount) %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
-    </section>
-  <% end %>
+    <% else %>
+      <p class="empty-state"><%= t("transactions.index.empty_state") %></p>
+    <% end %>
+  </section>
 </main>

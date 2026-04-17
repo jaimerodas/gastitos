@@ -1,28 +1,56 @@
 #login {
+  .login-logo {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 1rem;
+    svg { width: 4rem; height: 4rem; }
+  }
+
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+
   .field {
-    margin: 0 0 1em;
+    margin: 0 0 0.875rem;
   }
   label {
     display: block;
-    margin-bottom: 0.25em;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--secondary-fg-color);
   }
   input[type=text],
   input[type=email],
   input[type=password] {
-    font-size: 1.5em;
+    font-size: 1.125rem;
     display: block;
     width: 100%;
     box-sizing: border-box;
   }
   input[type=submit] {
     display: block;
-    font-size: 1.5em;
+    width: 100%;
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+
+  p {
+    text-align: center;
+    font-size: 0.875rem;
+    margin: 0.5rem 0;
   }
 }
+
 body:has(#login) {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
+}
+
+body:has(#login) main#login {
+  max-width: 22rem;
 }

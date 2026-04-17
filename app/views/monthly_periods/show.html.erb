@@ -22,14 +22,12 @@
           <% @income_by_category.each do |name, total| %>
             <tr>
               <td><%= name %></td>
-              <td class="money"><%= number_to_currency(total) %></td>
-              <td></td>
+              <td class="money amount-income"><%= number_to_currency(total) %></td>
             </tr>
           <% end %>
-          <tr>
+          <tr class="total">
             <td><strong><%= t("monthly_periods.show.total_income") %></strong></td>
-            <td class="money"><strong><%= number_to_currency(@period.total_income) %></strong></td>
-            <td></td>
+            <td class="money amount-income"><strong><%= number_to_currency(@period.total_income) %></strong></td>
           </tr>
         <% end %>
 
@@ -40,26 +38,22 @@
           <% @expenses_by_category.each do |name, total| %>
             <tr>
               <td><%= name %></td>
-              <td class="money"><%= number_to_currency(total.abs) %></td>
-              <td></td>
+              <td class="money amount-expense"><%= number_to_currency(total.abs) %></td>
             </tr>
           <% end %>
-          <tr>
+          <tr class="total">
             <td><strong><%= t("monthly_periods.show.total_expenses") %></strong></td>
-            <td class="money"><strong><%= number_to_currency(@period.total_expenses.abs) %></strong></td>
-            <td></td>
+            <td class="money amount-expense"><strong><%= number_to_currency(@period.total_expenses.abs) %></strong></td>
           </tr>
         <% end %>
         <tr><td colspan="2">&nbsp;</td></tr>
-        <tr>
+        <tr class="net">
           <td><strong><%= t("monthly_periods.show.net_income") %></strong></td>
-          <td class="money"><strong><%= number_to_currency(@period.net_income) %></strong></td>
-          <td></td>
+          <td class="money <%= @period.net_income.negative? ? "amount-expense" : "amount-income" %>"><strong><%= number_to_currency(@period.net_income) %></strong></td>
         </tr>
-        <tr>
+        <tr class="ending">
           <td><strong><%= t("monthly_periods.show.ending_balance") %></strong></td>
           <td class="money"><strong><%= number_to_currency(@period.ending_balance) %></strong></td>
-          <td></td>
         </tr>
       </tbody>
     </table>
@@ -85,7 +79,7 @@
                   <%= txn.category.name %><% if txn.description.present? %>: <%= txn.description %><% end %>
                 <% end %>
               </td>
-              <td class="money"><%= number_to_currency(txn.amount) %></td>
+              <td class="money <%= txn.amount.negative? ? "amount-expense" : "amount-income" %>"><%= number_to_currency(txn.amount) %></td>
             </tr>
             <% end %>
           <% end %>
