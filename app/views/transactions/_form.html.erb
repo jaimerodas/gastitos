@@ -45,7 +45,7 @@
           value: transaction.amount&.abs %>
     </div>
 
-    <div data-controller="category-select">
+    <div data-controller="category-select" data-category-select-url-value="<%= categories_path %>">
       <div class="field">
         <%= f.label :category_id %>
         <%= render "categories/select", categories: categories,
