@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["select", "formTemplate", "formContainer", "newForm"]
+  static values = { url: String }
 
   changed() {
     if (this.selectTarget.value === "new") {
@@ -26,7 +27,7 @@ export default class extends Controller {
 
     if (!name) return
 
-    const response = await fetch("/categories", {
+    const response = await fetch(this.urlValue, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -47,13 +48,12 @@ export default class extends Controller {
 
   addOptionToSelect(category) {
     const select = this.selectTarget
-    const groupLabel = category.category_type === "expense" ? "Expenses" : "Income"
 
-    let optgroup = select.querySelector(`optgroup[label="${groupLabel}"]`)
+    let optgroup = select.querySelector(`optgroup[data-category-type="${category.category_type}"]`)
     if (!optgroup) {
       optgroup = document.createElement("optgroup")
-      optgroup.label = groupLabel
-      // Insert before the "create new" option
+      optgroup.dataset.categoryType = category.category_type
+      optgroup.label = category.category_type === "expense" ? "Gastos" : "Ingresos"
       const newOption = select.querySelector('option[value="new"]')
       select.insertBefore(optgroup, newOption)
     }

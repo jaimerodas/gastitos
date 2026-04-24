@@ -3,14 +3,14 @@
         data-action="category-select#changed">
   <option value=""><%= t("transactions.form.select_category") %></option>
   <% if categories.expenses.any? %>
-    <optgroup label="<%= t("categories.select.expenses") %>">
+    <optgroup label="<%= t("categories.select.expenses") %>" data-category-type="expense">
       <% categories.expenses.each do |cat| %>
         <option value="<%= cat.id %>" <%= "selected" if cat.id == selected %>><%= cat.name %></option>
       <% end %>
     </optgroup>
   <% end %>
   <% if categories.income.any? %>
-    <optgroup label="<%= t("categories.select.income") %>">
+    <optgroup label="<%= t("categories.select.income") %>" data-category-type="income">
       <% categories.income.each do |cat| %>
         <option value="<%= cat.id %>" <%= "selected" if cat.id == selected %>><%= cat.name %></option>
       <% end %>
