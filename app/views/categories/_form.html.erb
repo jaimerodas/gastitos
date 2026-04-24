@@ -1,16 +1,20 @@
-<fieldset data-category-select-target="newForm">
+<fieldset class="category-form">
   <legend><%= t("categories.form.title") %></legend>
-  <div>
-    <label for="category_name"><%= Category.human_attribute_name(:name) %></label>
-    <input type="text" name="category[name]" id="category_name" required>
+  <div class="category-form__fields">
+    <div>
+      <label for="category_name"><%= Category.human_attribute_name(:name) %></label>
+      <input type="text" name="category[name]" id="category_name" required>
+    </div>
+    <div>
+      <label for="category_category_type"><%= Category.human_attribute_name(:category_type) %></label>
+      <select name="category[category_type]" id="category_category_type" required>
+        <option value="expense"><%= t("categories.form.expense") %></option>
+        <option value="income"><%= t("categories.form.income") %></option>
+      </select>
+    </div>
   </div>
-  <div>
-    <label for="category_category_type"><%= Category.human_attribute_name(:category_type) %></label>
-    <select name="category[category_type]" id="category_category_type" required>
-      <option value="expense"><%= t("categories.form.expense") %></option>
-      <option value="income"><%= t("categories.form.income") %></option>
-    </select>
+  <div class="category-form__actions">
+    <button type="button" data-action="category-select#cancel"><%= t("categories.form.cancel") %></button>
+    <button type="button" data-action="category-select#createCategory"><%= t("categories.form.submit") %></button>
   </div>
-  <button type="button" data-action="category-select#createCategory"><%= t("categories.form.submit") %></button>
-  <button type="button" data-action="category-select#cancel"><%= t("categories.form.cancel") %></button>
 </fieldset>
