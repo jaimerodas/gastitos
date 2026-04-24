@@ -58,6 +58,68 @@
     align-self: flex-start;
     margin-top: 0.25rem;
   }
+
+  .category-form {
+    display: block;
+    padding: 0.5rem 1rem 1rem;
+    margin: 1em 0;
+    background: transparent;
+    border: 1px solid var(--subsection-border);
+    border-radius: var(--radius-sm);
+
+    > legend {
+      display: block;
+      padding: 0;
+      margin: 0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--secondary-fg-color);
+    }
+
+    > .category-form__actions {
+      margin-top: 0.75rem;
+    }
+  }
+
+  .category-form__fields {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.5rem 0.75rem;
+    flex: 0 0 auto;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.25rem;
+      flex: 1 1 10rem;
+      min-width: 0;
+    }
+
+    label {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--secondary-fg-color);
+    }
+
+    input, select {
+      flex: 0 0 auto;
+      width: 100%;
+    }
+  }
+
+  .category-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    flex: 0 0 auto;
+  }
 }
 
 #transactions {
