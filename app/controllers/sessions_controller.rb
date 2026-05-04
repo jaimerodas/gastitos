@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
 
     if user&.approved?
       session[:user_id] = user.id
-      ActivityLogger.log_login(user)
+      ActivityLogger.log(user, :login)
       redirect_to root_path
     elsif user
       redirect_to new_session_path, alert: t("sessions.create.unapproved")
@@ -20,7 +20,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    ActivityLogger.log_logout(current_user) if current_user
+    ActivityLogger.log(current_user, :logout) if current_user
     session.delete(:user_id)
     redirect_to root_path
   end

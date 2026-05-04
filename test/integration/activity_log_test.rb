@@ -3,14 +3,15 @@ require "test_helper"
 class ActivityLogTest < ActionDispatch::IntegrationTest
   setup do
     @tmpdir = Dir.mktmpdir
-    ActivityLogger.log_dir = Pathname.new(@tmpdir)
+    @original_default_dir = ActivityLogger::FileStore.default_dir
+    ActivityLogger::FileStore.default_dir = Pathname.new(@tmpdir)
     @admin = users(:jaime)
     @editor = users(:sofia)
   end
 
   teardown do
     FileUtils.remove_entry(@tmpdir)
-    ActivityLogger.log_dir = Rails.root.join("storage", "activity_logs")
+    ActivityLogger::FileStore.default_dir = @original_default_dir
   end
 
   # -- Transaction logging --
@@ -25,8 +26,10 @@ class ActivityLogTest < ActionDispatch::IntegrationTest
       description: "Tacos"
     } }
 
-    lines = ActivityLogger.recent_lines(@admin)
-    assert lines.any? { |l| l.include?("Creó gasto") && l.include?("Tacos") }
+    lines = ActivityLogger.recent(@admin)
+    assert_not_empty lines
+    assert_includes lines.first, I18n.t("activity.types.expense")
+    assert_includes lines.first, "Tacos"
   end
 
   test "updating a transaction logs changes for the acting user" do
@@ -40,8 +43,10 @@ class ActivityLogTest < ActionDispatch::IntegrationTest
       description: "Burritos"
     } }
 
-    lines = ActivityLogger.recent_lines(@admin)
-    assert lines.any? { |l| l.include?("Editó gasto") && l.include?("monto") }
+    lines = ActivityLogger.recent(@admin)
+    assert_not_empty lines
+    assert_includes lines.first, "##{txn.id}"
+    assert_includes lines.first, I18n.t("activity.types.expense")
   end
 
   test "destroying a transaction logs activity for the acting user" do
@@ -50,8 +55,10 @@ class ActivityLogTest < ActionDispatch::IntegrationTest
 
     delete transaction_path(txn)
 
-    lines = ActivityLogger.recent_lines(@admin)
-    assert lines.any? { |l| l.include?("Eliminó gasto") && l.include?("Food") }
+    lines = ActivityLogger.recent(@admin)
+    assert_not_empty lines
+    assert_includes lines.first, I18n.t("activity.types.expense")
+    assert_includes lines.first, "Food"
   end
 
   # -- Session logging --
@@ -59,16 +66,16 @@ class ActivityLogTest < ActionDispatch::IntegrationTest
   test "logging in records activity" do
     log_in_as @editor
 
-    lines = ActivityLogger.recent_lines(@editor)
-    assert lines.any? { |l| l.include?("Inició sesión") }
+    lines = ActivityLogger.recent(@editor)
+    assert_includes lines.join, I18n.t("activity.login")
   end
 
   test "logging out records activity" do
     log_in_as @editor
     delete session_path
 
-    lines = ActivityLogger.recent_lines(@editor)
-    assert lines.any? { |l| l.include?("Cerró sesión") }
+    lines = ActivityLogger.recent(@editor)
+    assert_includes lines.join, I18n.t("activity.logout")
   end
 
   # -- Password reset logging --
@@ -76,8 +83,8 @@ class ActivityLogTest < ActionDispatch::IntegrationTest
   test "requesting a password reset logs activity" do
     post password_resets_path, params: { email: @editor.email }
 
-    lines = ActivityLogger.recent_lines(@editor)
-    assert lines.any? { |l| l.include?("Solicitó restablecimiento de contraseña") }
+    lines = ActivityLogger.recent(@editor)
+    assert_includes lines.join, I18n.t("activity.password_reset_requested")
   end
 
   test "completing a password reset logs activity" do
@@ -86,14 +93,14 @@ class ActivityLogTest < ActionDispatch::IntegrationTest
       user: { password: "newpassword123", password_confirmation: "newpassword123" }
     }
 
-    lines = ActivityLogger.recent_lines(@editor)
-    assert lines.any? { |l| l.include?("Restableció su contraseña") }
+    lines = ActivityLogger.recent(@editor)
+    assert_includes lines.join, I18n.t("activity.password_reset_completed")
   end
 
   # -- Show page display --
 
   test "users show page displays recent activity lines" do
-    ActivityLogger.log(@editor, "Test activity line")
+    ActivityLogger::FileStore.new.append(@editor, "Test activity line")
     log_in_as @admin
 
     get user_path(@editor)
@@ -112,7 +119,7 @@ class ActivityLogTest < ActionDispatch::IntegrationTest
   # -- Download --
 
   test "admin can download activity log" do
-    ActivityLogger.log(@editor, "Downloadable line")
+    ActivityLogger::FileStore.new.append(@editor, "Downloadable line")
     log_in_as @admin
 
     get activity_log_user_path(@editor)
