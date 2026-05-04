@@ -1,9 +1,9 @@
 <main <% if current_user.can_edit? %> class="double-column"<% end %>>
-  <h1><%= @period.display_name %></h1>
+  <h1><%= @period_report.period.display_name %></h1>
 
   <% if current_user.can_edit? %>
     <%= render "transactions/form", transaction: @transaction, categories: @categories,
-        period: @period %>
+        period: @period_report.period %>
   <% end %>
 
   <section id="monthly-summary">
@@ -11,15 +11,15 @@
     <table>
       <tbody>
         <tr>
-          <td><% if current_user.can_edit? %><a href="<%= edit_monthly_period_path(@period) %>"><%= t("monthly_periods.show.starting_balance") %></a><% else %><%= t("monthly_periods.show.starting_balance") %><% end %></td>
-          <td class="money"><%= number_to_currency(@period.starting_balance) %></td>
+          <td><% if current_user.can_edit? %><a href="<%= edit_monthly_period_path(@period_report.period) %>"><%= t("monthly_periods.show.starting_balance") %></a><% else %><%= t("monthly_periods.show.starting_balance") %><% end %></td>
+          <td class="money"><%= number_to_currency(@period_report.period.starting_balance) %></td>
         </tr>
 
-        <% if @income_by_category.any? %>
+        <% if @period_report.income_by_category.any? %>
           <tr>
             <th class="section" colspan="2"><%= t("monthly_periods.show.income_section") %></th>
           </tr>
-          <% @income_by_category.each do |name, total| %>
+          <% @period_report.income_by_category.each do |name, total| %>
             <tr>
               <td><%= name %></td>
               <td class="money amount-income"><%= number_to_currency(total) %></td>
@@ -27,15 +27,15 @@
           <% end %>
           <tr class="total">
             <td><strong><%= t("monthly_periods.show.total_income") %></strong></td>
-            <td class="money amount-income"><strong><%= number_to_currency(@period.total_income) %></strong></td>
+            <td class="money amount-income"><strong><%= number_to_currency(@period_report.period.total_income) %></strong></td>
           </tr>
         <% end %>
 
-        <% if @expenses_by_category.any? %>
+        <% if @period_report.expenses_by_category.any? %>
           <tr>
             <th class="section" colspan="2"><%= t("monthly_periods.show.expenses_section") %></th>
           </tr>
-          <% @expenses_by_category.each do |name, total| %>
+          <% @period_report.expenses_by_category.each do |name, total| %>
             <tr>
               <td><%= name %></td>
               <td class="money amount-expense"><%= number_to_currency(total.abs) %></td>
@@ -43,28 +43,28 @@
           <% end %>
           <tr class="total">
             <td><strong><%= t("monthly_periods.show.total_expenses") %></strong></td>
-            <td class="money amount-expense"><strong><%= number_to_currency(@period.total_expenses.abs) %></strong></td>
+            <td class="money amount-expense"><strong><%= number_to_currency(@period_report.period.total_expenses.abs) %></strong></td>
           </tr>
         <% end %>
         <tr><td colspan="2">&nbsp;</td></tr>
         <tr class="net">
           <td><strong><%= t("monthly_periods.show.net_income") %></strong></td>
-          <td class="money <%= @period.net_income.negative? ? "amount-expense" : "amount-income" %>"><strong><%= number_to_currency(@period.net_income) %></strong></td>
+          <td class="money <%= @period_report.period.net_income.negative? ? "amount-expense" : "amount-income" %>"><strong><%= number_to_currency(@period_report.period.net_income) %></strong></td>
         </tr>
         <tr class="ending">
           <td><strong><%= t("monthly_periods.show.ending_balance") %></strong></td>
-          <td class="money"><strong><%= number_to_currency(@period.ending_balance) %></strong></td>
+          <td class="money"><strong><%= number_to_currency(@period_report.period.ending_balance) %></strong></td>
         </tr>
       </tbody>
     </table>
   </section>
 
-  <% if @transactions.any? %>
+  <% if @period_report.transactions.any? %>
     <section id="transactions">
-      <h2><%= @transactions.count %> <%= t("monthly_periods.show.transactions_title") %></h2>
+      <h2><%= @period_report.transactions.count %> <%= t("monthly_periods.show.transactions_title") %></h2>
       <table>
         <tbody>
-          <% @transactions.group_by {|t| t.date.day }.each do |day, txns| %>
+          <% @period_report.transactions.group_by {|t| t.date.day }.each do |day, txns| %>
             <tr>
               <th class="section" colspan="2"><%= day %></th>
             </tr>
@@ -72,7 +72,7 @@
             <tr>
               <td>
                 <% if current_user.can_edit? %>
-                  <a href="<%= edit_transaction_path(txn, return_to: monthly_period_path(@period)) %>">
+                  <a href="<%= edit_transaction_path(txn, return_to: monthly_period_path(@period_report.period)) %>">
                     <%= txn.category.name %><% if txn.description.present? %>: <%= txn.description %><% end %>
                   </a>
                 <% else %>
