@@ -2,29 +2,29 @@
   <h1><%= t("transactions.index.title") %></h1>
 
   <% if current_user.can_edit? %>
-    <%= render "form", transaction: @transaction, categories: @categories %>
+    <%= render "form", transaction: @transaction, categories: @dashboard.categories %>
   <% end %>
 
-  <% if @stats.any? %>
+  <% if @dashboard.stats.any? %>
     <section id="stats">
       <h2><%= t("transactions.index.stats_title") %></h2>
       <dl class="stats">
         <div>
           <dt><%= t("transactions.index.average_monthly") %></dt>
-          <dd class="big"><%= number_to_currency(@stats.average_monthly_spend) %></dd>
+          <dd class="big"><%= number_to_currency(@dashboard.stats.average_monthly_spend) %></dd>
         </div>
 
         <div>
           <dt><%= t("transactions.index.total_spend") %></dt>
-          <dd class="big"><%= number_to_currency(@stats.total_spend) %></dd>
+          <dd class="big"><%= number_to_currency(@dashboard.stats.total_spend) %></dd>
         </div>
 
-        <% if @stats.top_categories.any? %>
+        <% if @dashboard.stats.top_categories.any? %>
         <div>
           <dt><%= t("transactions.index.top_categories") %></dt>
           <dd>
             <ol>
-              <% @stats.top_categories.each do |cat| %>
+              <% @dashboard.stats.top_categories.each do |cat| %>
                 <li><%= cat[:name] %>: <%= number_to_currency(cat[:total]) %></li>
               <% end %>
             </ol>
@@ -37,7 +37,7 @@
 
   <section id="transactions">
     <h2><%= t("transactions.index.recent") %></h2>
-    <% if @transactions.any? %>
+    <% if @dashboard.recent_transactions.any? %>
       <table>
         <thead>
           <tr>
@@ -47,9 +47,9 @@
           </tr>
         </thead>
         <tbody>
-          <% @transactions.each do |txn| %>
+          <% @dashboard.recent_transactions.each do |txn| %>
             <tr>
-              <td class="tabular"><% period = @periods_by_month[[txn.date.year, txn.date.month]] %><% if period %><a href="<%= monthly_period_path(period) %>"><%= txn.date.strftime("%Y-%m") %></a>-<%= "%02d" % txn.date.day %><% else %><%= txn.date.strftime("%Y-%m-%d") %><% end %></td>
+              <td class="tabular"><% period = @dashboard.period_for(txn) %><% if period %><a href="<%= monthly_period_path(period) %>"><%= txn.date.strftime("%Y-%m") %></a>-<%= "%02d" % txn.date.day %><% else %><%= txn.date.strftime("%Y-%m-%d") %><% end %></td>
               <td>
                 <% if current_user.can_edit? %>
                   <a href="<%= edit_transaction_path(txn) %>">

@@ -4,7 +4,7 @@ class TransactionsController < ApplicationController
 
   def index
     @transaction = Transaction.new(date: Date.current)
-    load_index_data
+    @dashboard = TransactionsDashboard.new
   end
 
   def create
@@ -16,16 +16,12 @@ class TransactionsController < ApplicationController
       period = MonthlyPeriod.find_by!(year: @transaction.date.year, month: @transaction.date.month)
       redirect_to monthly_period_path(period)
     else
-      @categories = Category.order(:name)
-      return_to = params[:return_to]
-      if return_to.present? && return_to.match(%r{\A/meses/(\d{4}-\d{2})\z})
-        @period = MonthlyPeriod.find_by_slug!($1)
-        @transactions = @period.transactions.recent.includes(:category, :created_by)
-        @income_by_category = @period.income_by_category
-        @expenses_by_category = @period.expenses_by_category
+      if (period = period_from_return_to)
+        @period_report = MonthlyPeriodReport.new(period)
+        @categories = Category.order(:name)
         render "monthly_periods/show", status: :unprocessable_entity
       else
-        load_index_data
+        @dashboard = TransactionsDashboard.new
         render :index, status: :unprocessable_entity
       end
     end
@@ -64,18 +60,9 @@ class TransactionsController < ApplicationController
 
   private
 
-  def load_index_data
-    @stats = TransactionStats.new
-    @transactions = Transaction.recently_created.includes(:category, :created_by).limit(10)
-    @categories = Category.order(:name)
-
-    year_months = @transactions.map { |t| [ t.date.year, t.date.month ] }.uniq
-    if year_months.any?
-      conditions = year_months.map { "(year = ? AND month = ?)" }.join(" OR ")
-      @periods_by_month = MonthlyPeriod.where(conditions, *year_months.flatten).index_by { |p| [ p.year, p.month ] }
-    else
-      @periods_by_month = {}
-    end
+  def period_from_return_to
+    return unless params[:return_to].to_s.match(%r{\A/meses/(\d{4}-\d{2})\z})
+    MonthlyPeriod.find_by_slug!($1)
   end
 
   def transaction_params
