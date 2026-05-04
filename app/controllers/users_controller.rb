@@ -8,14 +8,14 @@ class UsersController < ApplicationController
   end
 
   def show
-    @activity_lines = ActivityLogger.recent_lines(@user)
+    @activity_lines = ActivityLogger.recent(@user)
   end
 
   def activity_log
-    path = ActivityLogger.log_path(@user)
+    contents = ActivityLogger.download_for(@user)
 
-    if path.exist?
-      send_file path, type: "text/plain", filename: "actividad_#{@user.name.parameterize}.log"
+    if contents.present?
+      send_data contents, type: "text/plain", filename: "actividad_#{@user.name.parameterize}.log"
     else
       redirect_to user_path(@user), alert: t("users.admin.no_activity")
     end

@@ -210,3 +210,19 @@ es:
       months: Meses
       users: Usuarios
       logout: Salir
+  activity:
+    login: Inició sesión
+    logout: Cerró sesión
+    password_reset_requested: Solicitó restablecimiento de contraseña
+    password_reset_completed: Restableció su contraseña
+    transaction_created: "Creó %{type}: %{amount} en %{description} el %{date} (ID: %{id})"
+    transaction_destroyed: "Eliminó %{type}: %{amount} en %{description} del %{date} (ID: %{id})"
+    transaction_updated: "Editó %{type} #%{id}: %{details}"
+    types:
+      expense: gasto
+      income: ingreso
+    changes:
+      amount: "monto %{old}→%{new}"
+      category: "categoría %{old}→%{new}"
+      date: "fecha %{old}→%{new}"
+      description: "descripción \"%{old}\"→\"%{new}\""

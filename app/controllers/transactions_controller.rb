@@ -12,7 +12,7 @@ class TransactionsController < ApplicationController
     @transaction.created_by = current_user
 
     if @transaction.save
-      ActivityLogger.log_transaction_created(current_user, @transaction)
+      ActivityLogger.log(current_user, :transaction_created, @transaction)
       period = MonthlyPeriod.find_by!(year: @transaction.date.year, month: @transaction.date.month)
       redirect_to monthly_period_path(period)
     else
@@ -40,7 +40,7 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.find(params[:id])
 
     if @transaction.update(transaction_params)
-      ActivityLogger.log_transaction_updated(current_user, @transaction, @transaction.previous_changes)
+      ActivityLogger.log(current_user, :transaction_updated, @transaction)
       redirect_to safe_return_path
     else
       @categories = Category.order(:name)
@@ -50,7 +50,7 @@ class TransactionsController < ApplicationController
 
   def destroy
     @transaction = Transaction.find(params[:id])
-    ActivityLogger.log_transaction_destroyed(current_user, @transaction)
+    ActivityLogger.log(current_user, :transaction_destroyed, @transaction)
     @transaction.destroy
 
     return_to = params[:return_to]
