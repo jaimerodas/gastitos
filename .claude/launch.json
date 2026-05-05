@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "rails",
-      "runtimeExecutable": "bin/rails",
-      "runtimeArgs": ["server", "-p", "3456", "-b", "127.0.0.1"],
+      "runtimeExecutable": "bin/preview-server",
+      "runtimeArgs": ["-p", "3456", "-b", "127.0.0.1"],
       "port": 3456
     }
   ]
