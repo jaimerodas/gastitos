@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+# Boot rails for Claude's preview flow, ensuring the dev database is migrated
+# and seeded first. Each worktree gets its own empty SQLite file, so without
+# this the preview opens to an unusable, empty app.
+
+def system!(*args)
+  system(*args, exception: true)
+end
+
+system! "bin/rails", "db:prepare"
+system! "bin/rails", "db:seed"
+
+exec "bin/rails", "server", *ARGV
