@@ -23,6 +23,9 @@ module Gastitos
     #
     config.time_zone = "America/Mexico_City"
     config.i18n.default_locale = :es
+
+    # This app has no attachments, so no image processing backend is bundled.
+    config.active_storage.variant_processor = :disabled
     # config.eager_load_paths << Rails.root.join("extras")
   end
 end

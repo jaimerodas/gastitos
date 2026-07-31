@@ -4,7 +4,7 @@ Un registro de gastos familiar. Permite llevar un control compartido de ingresos
 
 ## Requisitos
 
-- Ruby 4.0.2
+- Ruby 4.0.6
 - SQLite 3
 
 ## Instalación
