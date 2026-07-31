@@ -16,6 +16,8 @@ bundle install
 bin/rails db:setup
 ```
 
+Para enviar los correos de restablecimiento de contraseña se necesita la variable de entorno `RESEND_API_KEY`.
+
 ## Uso
 
 ```bash
@@ -42,8 +44,24 @@ En la sección de **Meses** se puede ver un estado de resultados por cada mes qu
 
 Los periodos se crean automáticamente al registrar la primera transacción de un mes y se eliminan si se borran todas sus transacciones.
 
+### Usuarios
+
+Cada cuenta tiene un rol:
+
+- **Lector** — sólo consulta transacciones y periodos
+- **Editor** — además registra, edita y borra transacciones
+- **Administrador** — además administra las demás cuentas
+
+Desde **Usuarios**, un administrador puede aprobar o revocar el acceso de una cuenta, cambiar su rol, eliminarla y descargar su registro de actividad: una bitácora de inicios de sesión y cambios a transacciones.
+
+Quien olvide su contraseña puede restablecerla desde la pantalla de inicio de sesión. Se envía un enlace por correo que vence en dos horas.
+
 ## Pruebas
 
 ```bash
 bin/rails test
 ```
+
+## Despliegue
+
+La app se despliega como contenedor Docker con [Kamal](https://kamal-deploy.org). La configuración está en `config/deploy.yml`.

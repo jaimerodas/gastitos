@@ -1,11 +1,13 @@
 # Gastitos
 
-A family expense tracker built with Rails 8.1. All UI is in Spanish.
+A family expense tracker built with Rails 8.1. All UI and routes are in Spanish.
 
 ## Quick Start
 
 ```
-bin/rails test          # Run full test suite (minitest)
+bin/rails test          # Full test suite (minitest)
+script/test_fast        # RuboCop + tests
+script/test             # RuboCop + Brakeman + tests
 bin/rails db:migrate    # Run pending migrations
 bin/rails server        # Start dev server
 ```
@@ -15,47 +17,54 @@ bin/rails server        # Start dev server
 ### Stack
 
 - Rails 8.1 with SQLite, Propshaft, Importmap, Hotwire (Turbo + Stimulus)
-- Authentication: `has_secure_password` (bcrypt), session-based
-- No CSS framework — empty `application.css`, semantic HTML only
+- Authentication: `has_secure_password` (bcrypt), session-based. Password resets email via Resend (`RESEND_API_KEY`).
+- CSS: per-component stylesheets in `app/assets/stylesheets/`, no framework. `application.css` is empty because `stylesheet_link_tag :app` bundles every file in that directory — new files load automatically. Light/dark mode via oklch in `colors.css`.
 - I18n: default locale is `:es`, all strings in `config/locales/es.yml`
 - Timezone: `America/Mexico_City`
+- Deployed as a Docker container with Kamal (`config/deploy.yml`)
 
 ### Models
 
-- **User** — name, email, password_digest, role (enum: viewer/editor/admin), approved. First user is auto-admin + auto-approved. Subsequent users need admin approval and default to viewer role. Viewers can only read; editors can create/edit/delete transactions.
+- **User** — name, email, password_digest, role (enum: viewer/editor/admin), approved. First user is auto-admin + auto-approved. Subsequent users need admin approval and default to viewer. `can_edit?` gates writes. Reset tokens via `generates_token_for :password_reset, expires_in: 2.hours`.
 - **Category** — name (unique), category_type ("expense" or "income"). Shared across all users.
 - **Transaction** — amount (signed decimal: negative=expense, positive=income), date, description (optional, max 140 chars), belongs_to category + created_by (User). Amount sign is auto-applied from category type via `before_validation`. Callbacks manage MonthlyPeriod lifecycle.
-- **MonthlyPeriod** — month, year, starting_balance. Auto-created on first transaction for a month, auto-deleted when last transaction is removed. No FK from transactions — relationship is derived from date range. Starting balance defaults to previous period's ending balance.
+- **MonthlyPeriod** — month, year, starting_balance. Auto-created on first transaction for a month, auto-deleted when the last one is removed. No FK from transactions — the relationship is derived from date range. Starting balance defaults to the previous period's ending balance. `to_param` is a `YYYY-MM` slug.
+
+Plain objects keep controllers thin — query and presentation logic belongs here:
+
+- **TransactionsDashboard** — home page: recent transactions + stats
+- **TransactionStats** — spending aggregates
+- **MonthlyPeriodReport** — P&L for a single period
+
+### Activity log
+
+`ActivityLogger.log(user, :event, *args)` appends a line to `storage/activity_logs/user_<id>.log`. One class per event in `app/models/activity_events/`, registered in `ActivityLogger::EVENTS`; each owns its own message via I18n (`activity.*`). `ActivityLogger::FileStore` handles I/O and rotation (1MB × 5 files). Admins view with `recent(user)` and download with `download_for(user)`.
 
 ### Controllers & Routes
 
-- `root` → `transactions#index` (create form + last 10 transactions)
-- `resource :session` — login/logout
-- `resources :users` — signup (new, create only)
-- `resources :transactions` — create, edit, update, destroy
-- `resources :categories` — create only (JSON endpoint for Stimulus inline creation)
-- `resources :monthly_periods, path: "meses"` — index, show (P&L), edit/update (starting balance)
+All paths are Spanish — `config/routes.rb` wraps everything in a `scope path_names:` block.
 
-### Key Patterns
+- `root` → `transactions#index` (create form, stats, last 10 transactions)
+- `resource :session`, path `sesion` — login/logout
+- `resources :password_resets`, path `restablecer` — token-based, `param: :token`
+- `resources :users`, path `usuarios` — new/create (signup), plus admin-only index/show/destroy and `activity_log` (`/usuarios/:id/actividad`)
+  - `resource :approval`, path `aprobacion` — admin approve/revoke
+  - `resource :role`, path `rol` — admin role changes
+- `resources :transactions`, path `transacciones` — create, edit, update, destroy
+- `resources :categories`, path `categorias` — create only (JSON endpoint for Stimulus inline creation)
+- `resources :monthly_periods`, path `meses` — index, show (P&L), edit/update (starting balance)
+
+`ApplicationController` provides `require_login`, `require_admin`, and `require_editor`.
+
+## Key Patterns
 
 - **Transaction form** (`_form.html.erb`) is shared between create (index) and edit views
-- **return_to parameter** on transaction edit/update — validated against `/meses/\d+` to prevent open redirects. Passed as hidden field to survive validation re-renders.
-- **Category inline creation** — Stimulus `category-select` controller POSTs JSON to `/categories`, adds option to select dynamically
+- **return_to parameter** on transaction create/edit/update — validated against `/meses/YYYY-MM` to prevent open redirects. Passed as a hidden field to survive validation re-renders.
+- **Category inline creation** — the `category-select` Stimulus controller POSTs JSON to `/categorias` and adds the option to the select dynamically
+- All user-facing text uses `t()`; amounts are always entered positive, with the sign inferred from the category
 
 ## Testing
 
-- Framework: Minitest with fixtures
-- Test dirs: `test/models/` (unit), `test/integration/` (controller+view)
-- Run: `bin/rails test` or `script/test`
-- Fixtures in `test/fixtures/` — users (jaime/admin, sofia/approved, unapproved), categories (food, rideshare, salary), transactions (lunch, uber, paycheck), monthly_periods (march_2026)
-- Model tests check validations, callbacks, scopes
-- Integration tests check full request/response cycles including redirects, flash messages, and HTML assertions
+- Minitest with fixtures. `test/models/` (unit), `test/integration/` (full request/response cycles including redirects, flash messages, and HTML assertions), `test/mailers/`.
+- Fixtures in `test/fixtures/` — users (jaime/admin, sofia/editor, viewer, unapproved), categories (food, rideshare, salary), transactions (lunch, uber, paycheck), monthly_periods (march_2026)
 - Error messages are in Spanish — model tests assert `errors[:field].any?` rather than matching specific message strings
-
-## Conventions
-
-- All user-facing text uses `t()` helper with keys in `config/locales/es.yml`
-- Views are semantic HTML with no styling — no classes, no CSS framework
-- Forms use Rails helpers (`form_with`, `date_select`, etc.)
-- Delete actions use `button_to` with `data-turbo-confirm` for browser confirmation
-- Amounts are always entered as positive by users; sign is inferred from category type
