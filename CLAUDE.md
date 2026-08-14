@@ -18,6 +18,7 @@ bin/rails server        # Start dev server
 
 - Rails 8.1 with SQLite, Propshaft, Importmap, Hotwire (Turbo + Stimulus)
 - Authentication: `has_secure_password` (bcrypt), session-based. Password resets email via Resend (`RESEND_API_KEY`).
+- No background jobs. There is no queue backend — the reset email is the app's only outbound mail and is sent inline with `deliver_now`, wrapped in a rescue so a Resend outage can't turn the response into an account-enumeration oracle. Anything added later that needs `deliver_later`/`perform_later` needs a queue backend first; the default `:async` adapter loses jobs on restart.
 - CSS: per-component stylesheets in `app/assets/stylesheets/`, no framework. `application.css` is empty because `stylesheet_link_tag :app` bundles every file in that directory — new files load automatically. Light/dark mode via oklch in `colors.css`.
 - I18n: default locale is `:es`, all strings in `config/locales/es.yml`
 - Timezone: `America/Mexico_City`

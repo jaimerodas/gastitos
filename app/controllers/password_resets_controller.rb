@@ -7,7 +7,7 @@ class PasswordResetsController < ApplicationController
   def create
     if (user = User.find_by(email: params[:email]))
       ActivityLogger.log(user, :password_reset_requested)
-      UserMailer.password_reset(user).deliver_later
+      send_reset_email(user)
     end
 
     redirect_to new_session_path, notice: t("password_resets.create.success")
@@ -38,6 +38,14 @@ class PasswordResetsController < ApplicationController
   end
 
   private
+
+  # Delivered inline — there is no job queue. A delivery failure must not change
+  # the response, otherwise a mail outage would reveal which emails have accounts.
+  def send_reset_email(user)
+    UserMailer.password_reset(user).deliver_now
+  rescue StandardError => e
+    Rails.logger.error("Password reset email failed for user #{user.id}: #{e.class}: #{e.message}")
+  end
 
   def password_params
     params.require(:user).permit(:password, :password_confirmation)
