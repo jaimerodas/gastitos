@@ -32,7 +32,8 @@
             <span>Gastitos</span>
           </a>
           <% if MonthlyPeriod.exists? %>
-            <a href="<%= monthly_periods_path %>" <%= 'aria-current="page"'.html_safe if request.path.start_with?("/meses") %>><%= t("layouts.application.months") %></a>
+            <a href="<%= monthly_periods_path %>" <%= 'aria-current="page"'.html_safe if request.path.start_with?("/meses") && request.path != summary_monthly_periods_path %>><%= t("layouts.application.months") %></a>
+            <a href="<%= summary_monthly_periods_path %>" <%= 'aria-current="page"'.html_safe if request.path == summary_monthly_periods_path %>><%= t("layouts.application.summary") %></a>
           <% end %>
           <% if current_user.admin? && User.count > 1 %>
             <a href="<%= users_path %>" <%= 'aria-current="page"'.html_safe if request.path.start_with?("/users") %>><%= t("layouts.application.users") %></a>

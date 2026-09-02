@@ -36,6 +36,8 @@ Plain objects keep controllers thin — query and presentation logic belongs her
 - **TransactionsDashboard** — home page: recent transactions + stats
 - **TransactionStats** — spending aggregates
 - **MonthlyPeriodReport** — P&L for a single period
+- **MonthlyPeriodWindow** — picks which existing periods the multi-month summary shows (last 3/6/12 or all, anchored on the newest period's `YYYY-MM` slug) and computes the older/newer paging anchors
+- **MultiPeriodReport** — P&L across several periods in one grouped query; exposes per-period and total figures plus `gap_before` for unrecorded months
 
 ### Activity log
 
@@ -54,6 +56,7 @@ All paths are Spanish — `config/routes.rb` wraps everything in a `scope path_n
 - `resources :transactions`, path `transacciones` — create, edit, update, destroy
 - `resources :categories`, path `categorias` — create only (JSON endpoint for Stimulus inline creation)
 - `resources :monthly_periods`, path `meses` — index, show (P&L), edit/update (starting balance)
+  - `summary` collection route (`/meses/resumen`) — multi-month P&L over existing periods; params `meses` (3/6/12/todos) and `hasta` (newest period slug)
 
 `ApplicationController` provides `require_login`, `require_admin`, and `require_editor`.
 
@@ -69,3 +72,4 @@ All paths are Spanish — `config/routes.rb` wraps everything in a `scope path_n
 - Minitest with fixtures. `test/models/` (unit), `test/integration/` (full request/response cycles including redirects, flash messages, and HTML assertions), `test/mailers/`.
 - Fixtures in `test/fixtures/` — users (jaime/admin, sofia/editor, viewer, unapproved), categories (food, rideshare, salary), transactions (lunch, uber, paycheck), monthly_periods (march_2026)
 - Error messages are in Spanish — model tests assert `errors[:field].any?` rather than matching specific message strings
+- Only one `monthly_periods` fixture exists on purpose (stats and dashboard tests assert exact totals). Tests that need several periods create them in `setup`.

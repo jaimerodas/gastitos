@@ -6,6 +6,11 @@ class MonthlyPeriodsController < ApplicationController
     @periods = MonthlyPeriod.chronological
   end
 
+  def summary
+    @window = MonthlyPeriodWindow.new(size: params[:meses], anchor: params[:hasta])
+    @report = MultiPeriodReport.new(@window.periods)
+  end
+
   def show
     @period_report = MonthlyPeriodReport.new(MonthlyPeriod.find_by_slug!(params[:id]))
     @transaction = Transaction.new(date: default_date_for_period(@period_report.period))

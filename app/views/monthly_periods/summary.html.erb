@@ -1,0 +1,113 @@
+<main id="period-summary">
+  <h1><%= t("monthly_periods.summary.title") %></h1>
+  <% if @window.empty? %>
+    <p class="empty-state"><%= t("monthly_periods.summary.empty_state") %></p>
+  <% else %>
+    <nav class="window-controls" aria-label="<%= t("monthly_periods.summary.show_label") %>">
+      <ul class="inline-actions sizes">
+        <% MonthlyPeriodWindow::SIZES.each do |n| %>
+          <li><a href="<%= summary_monthly_periods_path(meses: n, hasta: @window.anchor) %>" <%= 'aria-current="page"'.html_safe if @window.size_param == n.to_s %>><%= t("monthly_periods.summary.last_n", count: n) %></a></li>
+        <% end %>
+        <li><a href="<%= summary_monthly_periods_path(meses: MonthlyPeriodWindow::ALL) %>" <%= 'aria-current="page"'.html_safe if @window.all? %>><%= t("monthly_periods.summary.all") %></a></li>
+      </ul>
+      <% unless @window.all? %>
+        <ul class="inline-actions pager">
+          <% if @window.older_anchor %><li><a rel="prev" href="<%= summary_monthly_periods_path(meses: @window.size_param, hasta: @window.older_anchor) %>"><%= t("monthly_periods.summary.older") %></a></li><% end %>
+          <% if @window.newer_anchor %><li><a rel="next" href="<%= summary_monthly_periods_path(meses: @window.size_param, hasta: @window.newer_anchor) %>"><%= t("monthly_periods.summary.newer") %></a></li><% end %>
+        </ul>
+      <% end %>
+    </nav>
+
+    <% gap_classes = @report.periods.map { |period| @report.gap_before(period) ? " gap-after" : "" } %>
+    <% columns = @report.periods.size + 2 %>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <% @report.periods.each do |period| %>
+              <% gap = @report.gap_before(period) %>
+              <th class="money<%= " gap-after" if gap %>">
+                <a href="<%= monthly_period_path(period) %>"><%= period.short_name %></a>
+                <% if gap %><small class="gap-caption"><%= t("monthly_periods.summary.gap", months: month_run_label(gap)) %></small><% end %>
+              </th>
+            <% end %>
+            <th class="money summary-col"><%= t("monthly_periods.summary.total") %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label"><%= t("monthly_periods.show.starting_balance") %></td>
+            <% @report.periods.each_with_index do |period, i| %>
+              <td class="money<%= gap_classes[i] %>"><%= number_to_currency(@report.starting_balance_for(period)) %></td>
+            <% end %>
+            <td class="summary-col"></td>
+          </tr>
+
+          <% if @report.income_categories.any? %>
+            <tr>
+              <th class="section" colspan="<%= columns %>"><span><%= t("monthly_periods.show.income_section") %></span></th>
+            </tr>
+            <% @report.income_categories.each do |name| %>
+              <tr>
+                <td class="label"><%= name %></td>
+                <% @report.periods.each_with_index do |period, i| %>
+                  <%= amount_cell(@report.amount_for(period, name), "money amount-income#{gap_classes[i]}") %>
+                <% end %>
+                <td class="money amount-income summary-col"><%= number_to_currency(@report.total_for(name)) %></td>
+              </tr>
+            <% end %>
+            <tr class="total">
+              <td class="label"><strong><%= t("monthly_periods.show.total_income") %></strong></td>
+              <% @report.periods.each_with_index do |period, i| %>
+                <td class="money amount-income<%= gap_classes[i] %>"><strong><%= number_to_currency(@report.total_income_for(period)) %></strong></td>
+              <% end %>
+              <td class="money amount-income summary-col"><strong><%= number_to_currency(@report.total_income) %></strong></td>
+            </tr>
+          <% end %>
+
+          <% if @report.expense_categories.any? %>
+            <tr>
+              <th class="section" colspan="<%= columns %>"><span><%= t("monthly_periods.show.expenses_section") %></span></th>
+            </tr>
+            <% @report.expense_categories.each do |name| %>
+              <tr>
+                <td class="label"><%= name %></td>
+                <% @report.periods.each_with_index do |period, i| %>
+                  <%= amount_cell(@report.amount_for(period, name), "money amount-expense#{gap_classes[i]}") %>
+                <% end %>
+                <td class="money amount-expense summary-col"><%= number_to_currency(@report.total_for(name)) %></td>
+              </tr>
+            <% end %>
+            <tr class="total">
+              <td class="label"><strong><%= t("monthly_periods.show.total_expenses") %></strong></td>
+              <% @report.periods.each_with_index do |period, i| %>
+                <td class="money amount-expense<%= gap_classes[i] %>"><strong><%= number_to_currency(@report.total_expenses_for(period)) %></strong></td>
+              <% end %>
+              <td class="money amount-expense summary-col"><strong><%= number_to_currency(@report.total_expenses) %></strong></td>
+            </tr>
+          <% end %>
+
+          <tr><td colspan="<%= columns %>">&nbsp;</td></tr>
+
+          <tr class="net">
+            <td class="label"><strong><%= t("monthly_periods.show.net_income") %></strong></td>
+            <% @report.periods.each_with_index do |period, i| %>
+              <% net = @report.net_income_for(period) %>
+              <td class="money<%= gap_classes[i] %>"><strong class="<%= amount_class(net) %>"><%= number_to_currency(net) %></strong></td>
+            <% end %>
+            <td class="money summary-col"><strong class="<%= amount_class(@report.total_net_income) %>"><%= number_to_currency(@report.total_net_income) %></strong></td>
+          </tr>
+          <tr class="ending">
+            <td class="label"><strong><%= t("monthly_periods.show.ending_balance") %></strong></td>
+            <% @report.periods.each_with_index do |period, i| %>
+              <td class="money<%= gap_classes[i] %>"><strong><%= number_to_currency(@report.ending_balance_for(period)) %></strong></td>
+            <% end %>
+            <td class="summary-col"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</main>

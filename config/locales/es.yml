@@ -186,6 +186,17 @@ es:
   monthly_periods:
     index:
       title: Meses
+      summary_link: Resumen de varios meses
+    summary:
+      title: Resumen de varios meses
+      show_label: Mostrar
+      last_n: "Últimos %{count}"
+      all: Todos
+      older: "← Anteriores"
+      newer: "Siguientes →"
+      total: Total
+      gap: "sin datos: %{months}"
+      empty_state: Aún no hay meses registrados.
     show:
       pnl_title: Resumen
       starting_balance: Saldo inicial
@@ -208,6 +219,7 @@ es:
   layouts:
     application:
       months: Meses
+      summary: Resumen
       users: Usuarios
       logout: Salir
   activity:

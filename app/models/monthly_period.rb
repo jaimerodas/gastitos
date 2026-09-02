@@ -4,6 +4,7 @@ class MonthlyPeriod < ApplicationRecord
   validates :month, uniqueness: { scope: :year }
 
   scope :chronological, -> { order(year: :desc, month: :desc) }
+  scope :oldest_first, -> { order(year: :asc, month: :asc) }
 
   def to_param
     "#{year}-#{"%02d" % month}"
@@ -14,8 +15,20 @@ class MonthlyPeriod < ApplicationRecord
     find_by!(year: year, month: month)
   end
 
+  def start_date
+    Date.new(year, month, 1)
+  end
+
+  def end_date
+    start_date.end_of_month
+  end
+
+  def date_range
+    start_date..end_date
+  end
+
   def transactions
-    Transaction.where(date: start_date..end_date)
+    Transaction.where(date: date_range)
   end
 
   def net_income
@@ -60,6 +73,10 @@ class MonthlyPeriod < ApplicationRecord
     I18n.l(start_date, format: "%B").capitalize
   end
 
+  def short_name
+    I18n.l(start_date, format: "%b %Y").capitalize
+  end
+
   def self.find_or_create_for_date(date)
     find_or_create_by(month: date.month, year: date.year) do |period|
       period.starting_balance = default_starting_balance_for(date.month, date.year)
@@ -67,14 +84,6 @@ class MonthlyPeriod < ApplicationRecord
   end
 
   private
-
-  def start_date
-    Date.new(year, month, 1)
-  end
-
-  def end_date
-    start_date.end_of_month
-  end
 
   def self.default_starting_balance_for(month, year)
     previous = where("year < ? OR (year = ? AND month < ?)", year, year, month)

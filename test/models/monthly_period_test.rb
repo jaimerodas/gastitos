@@ -121,4 +121,24 @@ class MonthlyPeriodTest < ActiveSupport::TestCase
     periods = MonthlyPeriod.chronological
     assert periods.first.month >= periods.last.month || periods.first.year > periods.last.year
   end
+
+  test "date_range covers the whole month" do
+    period = monthly_periods(:march_2026)
+    assert_equal Date.new(2026, 3, 1)..Date.new(2026, 3, 31), period.date_range
+  end
+
+  test "start_date returns the first day of the month" do
+    period = monthly_periods(:march_2026)
+    assert_equal Date.new(2026, 3, 1), period.start_date
+  end
+
+  test "oldest_first scope orders oldest first" do
+    MonthlyPeriod.create!(month: 1, year: 2026, starting_balance: 0)
+    assert_equal [ "2026-01", "2026-03" ], MonthlyPeriod.oldest_first.map(&:to_param)
+  end
+
+  test "short_name returns abbreviated month and year" do
+    period = monthly_periods(:march_2026)
+    assert_equal "Mar 2026", period.short_name
+  end
 end

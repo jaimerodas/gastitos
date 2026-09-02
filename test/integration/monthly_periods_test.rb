@@ -16,6 +16,7 @@ class MonthlyPeriodsTest < ActionDispatch::IntegrationTest
     MonthlyPeriod.delete_all
     get root_path
     assert_select "a[href='#{monthly_periods_path}']", count: 0
+    assert_select "a[href='#{summary_monthly_periods_path}']", count: 0
   end
 
   # -- Index --

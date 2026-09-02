@@ -19,6 +19,8 @@ Rails.application.routes.draw do
     end
     resources :transactions, only: [ :create, :edit, :update, :destroy ], path: "transacciones"
     resources :categories, only: [ :create ], path: "categorias"
-    resources :monthly_periods, only: [ :index, :show, :edit, :update ], path: "meses"
+    resources :monthly_periods, only: [ :index, :show, :edit, :update ], path: "meses" do
+      get :summary, on: :collection, path: "resumen"
+    end
   end
 end

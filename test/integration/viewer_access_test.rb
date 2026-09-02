@@ -24,6 +24,11 @@ class ViewerAccessTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "viewer can see monthly period summary" do
+    get summary_monthly_periods_path
+    assert_response :success
+  end
+
   # === No forms visible ===
 
   test "viewer does not see transaction form on index" do
