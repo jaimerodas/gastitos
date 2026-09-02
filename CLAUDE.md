@@ -62,7 +62,7 @@ All paths are Spanish — `config/routes.rb` wraps everything in a `scope path_n
 
 ## Key Patterns
 
-- **Transaction form** (`_form.html.erb`) is shared between create (index) and edit views
+- **Transaction form** (`_form.html.erb`) is shared between create (index) and edit views. On month pages it renders as a native `<details>` accordion, open for the current month and the two before it (`MonthlyPeriod#recent?`, `RECENT_MONTHS`) and collapsed for older ones; validation errors always reopen it.
 - **return_to parameter** on transaction create/edit/update — validated against `/meses/YYYY-MM` to prevent open redirects. Passed as a hidden field to survive validation re-renders.
 - **Category inline creation** — the `category-select` Stimulus controller POSTs JSON to `/categorias` and adds the option to the select dynamically
 - All user-facing text uses `t()`; amounts are always entered positive, with the sign inferred from the category

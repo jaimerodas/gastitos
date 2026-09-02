@@ -141,4 +141,30 @@ class MonthlyPeriodTest < ActiveSupport::TestCase
     period = monthly_periods(:march_2026)
     assert_equal "Mar 2026", period.short_name
   end
+
+  # -- recent? --
+
+  test "recent? is true for the current month and the two before it" do
+    today = Date.new(2026, 9, 15)
+    assert MonthlyPeriod.new(month: 9, year: 2026).recent?(today: today)
+    assert MonthlyPeriod.new(month: 8, year: 2026).recent?(today: today)
+    assert MonthlyPeriod.new(month: 7, year: 2026).recent?(today: today)
+  end
+
+  test "recent? is false for months older than two months ago" do
+    today = Date.new(2026, 9, 15)
+    assert_not MonthlyPeriod.new(month: 6, year: 2026).recent?(today: today)
+    assert_not MonthlyPeriod.new(month: 3, year: 2026).recent?(today: today)
+  end
+
+  test "recent? crosses year boundaries" do
+    today = Date.new(2026, 1, 31)
+    assert MonthlyPeriod.new(month: 11, year: 2025).recent?(today: today)
+    assert_not MonthlyPeriod.new(month: 10, year: 2025).recent?(today: today)
+  end
+
+  test "recent? treats future months as recent" do
+    today = Date.new(2026, 9, 15)
+    assert MonthlyPeriod.new(month: 10, year: 2026).recent?(today: today)
+  end
 end

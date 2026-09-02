@@ -31,6 +31,14 @@ class MonthlyPeriod < ApplicationRecord
     Transaction.where(date: date_range)
   end
 
+  # The current month and the two before it. Older months get the
+  # transaction form collapsed, since they are mostly read, not edited.
+  RECENT_MONTHS = 3
+
+  def recent?(today: Date.current)
+    start_date >= today.beginning_of_month.prev_month(RECENT_MONTHS - 1)
+  end
+
   def net_income
     transactions.sum(:amount)
   end

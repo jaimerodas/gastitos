@@ -1,5 +1,14 @@
+<%# On a month page the form is an accordion, collapsed by default for older
+    months. Validation errors always reopen it so they are never hidden. %>
+<% collapsible = local_assigns[:period].present? %>
+<% title = transaction.persisted? ? t("transactions.form.edit_title") : t("transactions.form.new_title") %>
+<% if collapsible %>
+<details id="add-transaction"<% if period.recent? || transaction.errors.any? %> open<% end %>>
+  <summary><h2><%= title %></h2></summary>
+<% else %>
 <section id="add-transaction">
-  <h2><%= transaction.persisted? ? t("transactions.form.edit_title") : t("transactions.form.new_title") %></h2>
+  <h2><%= title %></h2>
+<% end %>
 
   <% if transaction.errors.any? %>
     <section role="alert">
@@ -65,4 +74,8 @@
 
     <%= f.submit t("transactions.form.submit") %>
   <% end %>
+<% if collapsible %>
+</details>
+<% else %>
 </section>
+<% end %>

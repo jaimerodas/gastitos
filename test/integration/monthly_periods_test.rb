@@ -72,6 +72,43 @@ class MonthlyPeriodsTest < ActionDispatch::IntegrationTest
     assert_select "td a", /Food/
   end
 
+  # -- Show: transaction form accordion --
+
+  test "show opens the transaction form for a recent month" do
+    travel_to Date.new(2026, 5, 10) do
+      get monthly_period_path(monthly_periods(:march_2026))
+    end
+    assert_select "details#add-transaction[open]"
+    assert_select "details#add-transaction summary h2", "Nueva transacción"
+  end
+
+  test "show collapses the transaction form for an old month" do
+    travel_to Date.new(2026, 9, 2) do
+      get monthly_period_path(monthly_periods(:march_2026))
+    end
+    assert_select "details#add-transaction"
+    assert_select "details#add-transaction[open]", count: 0
+  end
+
+  test "show opens the transaction form on an old month when it has errors" do
+    period = monthly_periods(:march_2026)
+    travel_to Date.new(2026, 9, 2) do
+      post transactions_path, params: {
+        return_to: monthly_period_path(period),
+        transaction: { "date(1i)" => "2026", "date(2i)" => "3", "date(3i)" => "5",
+                       amount: "", category_id: categories(:food).id }
+      }
+    end
+    assert_response :unprocessable_entity
+    assert_select "details#add-transaction[open]"
+  end
+
+  test "show hides the transaction form from viewers" do
+    log_in_as users(:viewer)
+    get monthly_period_path(monthly_periods(:march_2026))
+    assert_select "#add-transaction", count: 0
+  end
+
   # -- Edit balance --
 
   test "edit shows starting balance form" do
