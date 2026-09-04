@@ -2,8 +2,7 @@
   "enabled": true,
   "sources": [
     "**/*.*",
-    "!**/*.{md,txt}",
-    "replace/these/with/globs/of/your/source/and/test/files.*"
+    "!**/*.{md,txt}"
   ],
   "tests": [
     "**/*.{test,spec}.*",
