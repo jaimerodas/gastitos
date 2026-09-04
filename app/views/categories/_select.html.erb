@@ -2,9 +2,9 @@
         required data-category-select-target="select"
         data-action="category-select#changed">
   <option value=""><%= t("transactions.form.select_category") %></option>
-  <% if categories.expenses.any? %>
+  <% if categories.expense.any? %>
     <optgroup label="<%= t("categories.select.expenses") %>" data-category-type="expense">
-      <% categories.expenses.each do |cat| %>
+      <% categories.expense.each do |cat| %>
         <option value="<%= cat.id %>" <%= "selected" if cat.id == selected %>><%= cat.name %></option>
       <% end %>
     </optgroup>
