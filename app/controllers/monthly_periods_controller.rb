@@ -12,8 +12,8 @@ class MonthlyPeriodsController < ApplicationController
   end
 
   def show
-    @period_report = MonthlyPeriodReport.new(MonthlyPeriod.find_by_slug!(params[:id]))
-    @transaction = Transaction.new(date: default_date_for_period(@period_report.period))
+    @period = MonthlyPeriod.find_by_slug!(params[:id])
+    @transaction = Transaction.new(date: default_date_for_period(@period))
     @categories = Category.order(:name)
   end
 
@@ -34,11 +34,7 @@ class MonthlyPeriodsController < ApplicationController
   private
 
   def default_date_for_period(period)
-    if period.year == Date.current.year && period.month == Date.current.month
-      Date.current
-    else
-      Date.new(period.year, period.month, 1)
-    end
+    period.date_range.cover?(Date.current) ? Date.current : period.start_date
   end
 
   def period_params

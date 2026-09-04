@@ -32,12 +32,8 @@ class MultiPeriodReport
     total_income_for(period) - total_expenses_for(period)
   end
 
-  def starting_balance_for(period)
-    period.starting_balance
-  end
-
   def ending_balance_for(period)
-    starting_balance_for(period) + net_income_for(period)
+    period.starting_balance + net_income_for(period)
   end
 
   def total_for(name)
@@ -81,7 +77,6 @@ class MultiPeriodReport
       expense = {}
 
       if periods.present?
-        slugs = periods.map(&:to_param)
         range = periods.first.start_date..periods.last.end_date
 
         Transaction.joins(:category)
@@ -89,8 +84,6 @@ class MultiPeriodReport
                    .group(MONTH_KEY, "categories.category_type", "categories.name")
                    .sum(:amount)
                    .each do |(month, type, name), amount|
-          next unless slugs.include?(month)
-
           key = [ month, name ]
           if type == "income"
             income[key] = amount

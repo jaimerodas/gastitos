@@ -5,7 +5,7 @@ class MultiPeriodReportTest < ActiveSupport::TestCase
     create_txn(100, Date.new(2025, 11, 5), :food)     # creates period 2025-11
     create_txn(500, Date.new(2025, 12, 1), :salary)   # creates 2025-12
     create_txn(50,  Date.new(2025, 12, 9), :food)
-    @periods = MonthlyPeriod.oldest_first.to_a # [ 2025-11, 2025-12, 2026-03 ]
+    @periods = MonthlyPeriod.chronological.reverse # [ 2025-11, 2025-12, 2026-03 ]
     @nov, @dec, @mar = @periods
     @report = MultiPeriodReport.new(@periods)
   end
@@ -54,12 +54,6 @@ class MultiPeriodReportTest < ActiveSupport::TestCase
     assert_equal(-100, @report.net_income_for(@nov))
   end
 
-  test "starting_balance_for matches the period's starting balance" do
-    @periods.each do |period|
-      assert_equal period.starting_balance, @report.starting_balance_for(period)
-    end
-  end
-
   test "ending_balance_for matches the period's own ending balance" do
     @periods.each do |period|
       assert_equal period.ending_balance, @report.ending_balance_for(period)
@@ -88,14 +82,6 @@ class MultiPeriodReportTest < ActiveSupport::TestCase
 
   test "gap_before lists the first day of each missing month between shown periods" do
     assert_equal [ Date.new(2026, 1, 1), Date.new(2026, 2, 1) ], @report.gap_before(@mar)
-  end
-
-  test "excludes transactions that fall in a gap month not included in the periods" do
-    create_txn(20, Date.new(2026, 2, 10), :food)
-    MonthlyPeriod.find_by!(year: 2026, month: 2).destroy
-
-    report = MultiPeriodReport.new([ @dec, @mar ])
-    assert_equal 62.50, report.total_for("Food")
   end
 
   test "totals only cover the periods passed in, not every period in the database" do

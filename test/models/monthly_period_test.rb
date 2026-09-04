@@ -63,6 +63,33 @@ class MonthlyPeriodTest < ActiveSupport::TestCase
     assert_equal transactions(:uber).amount, result["Rideshare"]
   end
 
+  test "total_income equals the sum of income_by_category values" do
+    period = monthly_periods(:march_2026)
+    assert_equal period.income_by_category.values.sum, period.total_income
+  end
+
+  test "recent_transactions returns the period's transactions ordered by recent" do
+    period = monthly_periods(:march_2026)
+    txns = period.recent_transactions
+    assert_includes txns, transactions(:lunch)
+    assert_includes txns, transactions(:uber)
+    assert_includes txns, transactions(:paycheck)
+
+    dates = txns.map(&:date)
+    assert_equal dates.sort.reverse, dates
+  end
+
+  test "recent_transactions eager-loads category and created_by" do
+    period = monthly_periods(:march_2026)
+    txns = period.recent_transactions.load
+    assert_no_queries do
+      txns.each do |txn|
+        txn.category.name
+        txn.created_by.name
+      end
+    end
+  end
+
   test "display_name returns localized month and year" do
     period = monthly_periods(:march_2026)
     assert_equal "Marzo 2026", period.display_name
@@ -130,11 +157,6 @@ class MonthlyPeriodTest < ActiveSupport::TestCase
   test "start_date returns the first day of the month" do
     period = monthly_periods(:march_2026)
     assert_equal Date.new(2026, 3, 1), period.start_date
-  end
-
-  test "oldest_first scope orders oldest first" do
-    MonthlyPeriod.create!(month: 1, year: 2026, starting_balance: 0)
-    assert_equal [ "2026-01", "2026-03" ], MonthlyPeriod.oldest_first.map(&:to_param)
   end
 
   test "short_name returns abbreviated month and year" do

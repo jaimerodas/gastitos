@@ -35,7 +35,6 @@ Plain objects keep controllers thin — query and presentation logic belongs her
 
 - **TransactionsDashboard** — home page: recent transactions + stats
 - **TransactionStats** — spending aggregates
-- **MonthlyPeriodReport** — P&L for a single period
 - **MonthlyPeriodWindow** — picks which existing periods the multi-month summary shows (last 3/6/12 or all, anchored on the newest period's `YYYY-MM` slug) and computes the older/newer paging anchors
 - **MultiPeriodReport** — P&L across several periods in one grouped query; exposes per-period and total figures plus `gap_before` for unrecorded months
 

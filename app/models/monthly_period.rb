@@ -4,7 +4,6 @@ class MonthlyPeriod < ApplicationRecord
   validates :month, uniqueness: { scope: :year }
 
   scope :chronological, -> { order(year: :desc, month: :desc) }
-  scope :oldest_first, -> { order(year: :asc, month: :asc) }
 
   def to_param
     "#{year}-#{"%02d" % month}"
@@ -31,6 +30,10 @@ class MonthlyPeriod < ApplicationRecord
     Transaction.where(date: date_range)
   end
 
+  def recent_transactions
+    transactions.recent.includes(:category, :created_by)
+  end
+
   # The current month and the two before it. Older months get the
   # transaction form collapsed, since they are mostly read, not edited.
   RECENT_MONTHS = 3
@@ -48,29 +51,19 @@ class MonthlyPeriod < ApplicationRecord
   end
 
   def income_by_category
-    transactions.joins(:category)
-                .where(categories: { category_type: "income" })
-                .group("categories.name")
-                .sum(:amount)
+    by_category("income")
   end
 
   def expenses_by_category
-    transactions.joins(:category)
-                .where(categories: { category_type: "expense" })
-                .group("categories.name")
-                .sum(:amount)
+    by_category("expense")
   end
 
   def total_income
-    transactions.joins(:category)
-                .where(categories: { category_type: "income" })
-                .sum(:amount)
+    by_category("income").values.sum
   end
 
   def total_expenses
-    transactions.joins(:category)
-                .where(categories: { category_type: "expense" })
-                .sum(:amount)
+    by_category("expense").values.sum
   end
 
   def display_name
@@ -92,6 +85,14 @@ class MonthlyPeriod < ApplicationRecord
   end
 
   private
+
+  def by_category(type)
+    @by_category ||= {}
+    @by_category[type] ||= transactions.joins(:category)
+                                        .where(categories: { category_type: type })
+                                        .group("categories.name")
+                                        .sum(:amount)
+  end
 
   def self.default_starting_balance_for(month, year)
     previous = where("year < ? OR (year = ? AND month < ?)", year, year, month)

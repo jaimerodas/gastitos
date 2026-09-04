@@ -40,7 +40,7 @@
           <tr>
             <td class="label"><%= t("monthly_periods.show.starting_balance") %></td>
             <% @report.periods.each_with_index do |period, i| %>
-              <td class="money<%= gap_classes[i] %>"><%= number_to_currency(@report.starting_balance_for(period)) %></td>
+              <td class="money<%= gap_classes[i] %>"><%= number_to_currency(period.starting_balance) %></td>
             <% end %>
             <td class="summary-col"></td>
           </tr>

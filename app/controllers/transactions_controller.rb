@@ -17,7 +17,7 @@ class TransactionsController < ApplicationController
       redirect_to monthly_period_path(period)
     else
       if (period = period_from_return_to)
-        @period_report = MonthlyPeriodReport.new(period)
+        @period = period
         @categories = Category.order(:name)
         render "monthly_periods/show", status: :unprocessable_entity
       else
