@@ -1,6 +1,12 @@
 require_relative "boot"
 
-require "rails/all"
+require "active_model/railtie"
+require "active_record/railtie"
+require "active_job/railtie"
+require "action_controller/railtie"
+require "action_view/railtie"
+require "action_mailer/railtie"
+require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -24,8 +30,6 @@ module Gastitos
     config.time_zone = "America/Mexico_City"
     config.i18n.default_locale = :es
 
-    # This app has no attachments, so no image processing backend is bundled.
-    config.active_storage.variant_processor = :disabled
     # config.eager_load_paths << Rails.root.join("extras")
   end
 end
