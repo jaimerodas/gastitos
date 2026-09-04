@@ -41,7 +41,7 @@ Plain objects keep controllers thin — query and presentation logic belongs her
 
 ### Activity log
 
-`ActivityLogger.log(user, :event, *args)` appends a line to `storage/activity_logs/user_<id>.log`. One class per event in `app/models/activity_events/`, registered in `ActivityLogger::EVENTS`; each owns its own message via I18n (`activity.*`). `ActivityLogger::FileStore` handles I/O and rotation (1MB × 5 files). Admins view with `recent(user)` and download with `download_for(user)`.
+`ActivityLogger.log(user, :event, *args)` appends a line to `storage/activity_logs/user_<id>.log`. `ActivityLogger::EVENTS` maps each event key to a callable that returns its message via I18n (`activity.*`); the four static events are inline lambdas, the transaction events delegate to classes in `app/models/activity_events/` (`TransactionEvent` for created/destroyed, `TransactionUpdated` for diffing changes). `ActivityLogger::FileStore` handles I/O and rotation (1MB × 5 files). Admins view with `recent(user)` and download with `download_for(user)`.
 
 ### Controllers & Routes
 

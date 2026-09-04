@@ -1,31 +1,31 @@
 require "test_helper"
 
 class ActivityEventsTest < ActiveSupport::TestCase
-  # -- Simple events --
+  # -- Simple events (wired via ActivityLogger::EVENTS) --
 
-  test "Login message is the localized login string" do
-    assert_equal I18n.t("activity.login"), ActivityEvents::Login.new.message
+  test "login message is the localized login string" do
+    assert_equal I18n.t("activity.login"), ActivityLogger::EVENTS[:login].call
   end
 
-  test "Logout message is the localized logout string" do
-    assert_equal I18n.t("activity.logout"), ActivityEvents::Logout.new.message
+  test "logout message is the localized logout string" do
+    assert_equal I18n.t("activity.logout"), ActivityLogger::EVENTS[:logout].call
   end
 
-  test "PasswordResetRequested message is localized" do
+  test "password_reset_requested message is localized" do
     assert_equal I18n.t("activity.password_reset_requested"),
-                 ActivityEvents::PasswordResetRequested.new.message
+                 ActivityLogger::EVENTS[:password_reset_requested].call
   end
 
-  test "PasswordResetCompleted message is localized" do
+  test "password_reset_completed message is localized" do
     assert_equal I18n.t("activity.password_reset_completed"),
-                 ActivityEvents::PasswordResetCompleted.new.message
+                 ActivityLogger::EVENTS[:password_reset_completed].call
   end
 
-  # -- TransactionCreated --
+  # -- TransactionEvent (created/destroyed) --
 
-  test "TransactionCreated formats expense with category and description" do
+  test "TransactionEvent formats expense with category and description" do
     txn = transactions(:lunch)
-    msg = ActivityEvents::TransactionCreated.new(txn).message
+    msg = ActivityEvents::TransactionEvent.new(txn, "activity.transaction_created").message
     assert_includes msg, I18n.t("activity.types.expense")
     assert_includes msg, "$12.50"
     assert_includes msg, "Food: Tacos"
@@ -33,26 +33,24 @@ class ActivityEventsTest < ActiveSupport::TestCase
     assert_includes msg, "(ID: #{txn.id})"
   end
 
-  test "TransactionCreated formats income" do
+  test "TransactionEvent formats income" do
     txn = transactions(:paycheck)
-    msg = ActivityEvents::TransactionCreated.new(txn).message
+    msg = ActivityEvents::TransactionEvent.new(txn, "activity.transaction_created").message
     assert_includes msg, I18n.t("activity.types.income")
     assert_includes msg, "$1000.00"
     assert_includes msg, "Salary: March salary"
   end
 
-  test "TransactionCreated falls back to category name when description is blank" do
+  test "TransactionEvent falls back to category name when description is blank" do
     txn = transactions(:uber)  # description is nil
-    msg = ActivityEvents::TransactionCreated.new(txn).message
+    msg = ActivityEvents::TransactionEvent.new(txn, "activity.transaction_created").message
     assert_includes msg, "Rideshare"
     assert_not_includes msg, "Rideshare:"
   end
 
-  # -- TransactionDestroyed --
-
-  test "TransactionDestroyed formats expense with details" do
+  test "TransactionEvent uses the given i18n key" do
     txn = transactions(:lunch)
-    msg = ActivityEvents::TransactionDestroyed.new(txn).message
+    msg = ActivityEvents::TransactionEvent.new(txn, "activity.transaction_destroyed").message
     assert_includes msg, I18n.t("activity.types.expense")
     assert_includes msg, "$12.50"
     assert_includes msg, "Food: Tacos"

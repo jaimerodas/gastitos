@@ -24,12 +24,13 @@ class ActivityLoggerTest < ActiveSupport::TestCase
   setup do
     @user = users(:jaime)
     @store = FakeStore.new
-    fixed_time = Time.zone.local(2026, 5, 3, 14, 30, 45)
-    @logger = ActivityLogger.new(store: @store, now: -> { fixed_time })
+    @logger = ActivityLogger.new(store: @store)
   end
 
   test "log timestamps the event message and forwards to the store" do
-    @logger.log(@user, :login)
+    travel_to Time.zone.local(2026, 5, 3, 14, 30, 45) do
+      @logger.log(@user, :login)
+    end
     assert_equal [ "[2026-05-03 14:30:45] #{I18n.t('activity.login')}" ], @store.appended[@user.id]
   end
 
@@ -81,12 +82,11 @@ class ActivityLoggerTest < ActiveSupport::TestCase
     assert_instance_of ActivityLogger::FileStore, logger.instance_variable_get(:@store)
   end
 
-  test "EVENTS registry covers every ActivityEvents class" do
-    expected = ActivityEvents.constants.filter_map do |c|
-      klass = ActivityEvents.const_get(c)
-      klass if klass.is_a?(Class)
-    end.to_set
-    assert_equal expected, ActivityLogger::EVENTS.values.to_set
+  test "EVENTS registry has a callable for each known event" do
+    assert_equal %i[login logout password_reset_requested password_reset_completed
+                    transaction_created transaction_destroyed transaction_updated].to_set,
+                 ActivityLogger::EVENTS.keys.to_set
+    assert ActivityLogger::EVENTS.values.all? { |callable| callable.respond_to?(:call) }
   end
 
   # -- Class-method facade --

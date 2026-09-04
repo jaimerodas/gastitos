@@ -2,8 +2,6 @@ module ActivityEvents
   class TransactionUpdated
     include TransactionFormatting
 
-    FORMATTABLE = %i[amount category date description].freeze
-
     def initialize(transaction)
       @transaction = transaction
       @changes = build_summary
@@ -21,21 +19,16 @@ module ActivityEvents
     private
 
     def build_summary
-      previous = @transaction.previous_changes
-      summary = {}
-      summary[:amount]      = previous["amount"]      if previous.key?("amount")
-      summary[:date]        = previous["date"]        if previous.key?("date")
-      summary[:description] = previous["description"] if previous.key?("description")
-      if previous.key?("category_id")
-        old_id, _ = previous["category_id"]
+      summary = @transaction.previous_changes.slice("amount", "date", "description").symbolize_keys
+      if @transaction.previous_changes.key?("category_id")
+        old_id, _ = @transaction.previous_changes["category_id"]
         summary[:category] = [ Category.find(old_id).name, @transaction.category.name ]
       end
       summary
     end
 
     def details
-      @changes.filter_map { |k, (old, new)| format_change(k, old, new) if FORMATTABLE.include?(k) }
-              .join(", ")
+      @changes.map { |k, (old, new)| format_change(k, old, new) }.join(", ")
     end
 
     def format_change(key, old, new)
