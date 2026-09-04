@@ -2,13 +2,9 @@ class RolesController < ApplicationController
   before_action :require_login
   before_action :require_admin
   before_action :set_user
+  before_action :forbid_self
 
   def update
-    if @user == current_user
-      redirect_to user_path(@user), alert: t("users.admin.cannot_modify_self")
-      return
-    end
-
     role = params[:role]
     unless User.roles.key?(role)
       redirect_to user_path(@user), alert: t("users.admin.invalid_role")

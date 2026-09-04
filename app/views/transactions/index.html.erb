@@ -59,7 +59,7 @@
                   <%= txn.category.name %><% if txn.description.present? %>: <%= txn.description %><% end %>
                 <% end %>
               </td>
-              <td class="money <%= txn.amount.negative? ? "amount-expense" : "amount-income" %>"><%= number_to_currency(txn.amount) %></td>
+              <td class="money <%= amount_class(txn.amount) %>"><%= number_to_currency(txn.amount) %></td>
             </tr>
           <% end %>
         </tbody>

@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :require_login, only: [ :index, :show, :destroy, :activity_log ]
   before_action :require_admin, only: [ :index, :show, :destroy, :activity_log ]
   before_action :set_user, only: [ :show, :destroy, :activity_log ]
+  before_action :forbid_self, only: [ :destroy ]
 
   def index
     @users = User.order(:name)
@@ -41,11 +42,6 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    if @user == current_user
-      redirect_to user_path(@user), alert: t("users.admin.cannot_modify_self")
-      return
-    end
-
     if @user.destroy
       redirect_to users_path, notice: t("users.admin.destroyed")
     else

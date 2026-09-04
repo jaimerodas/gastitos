@@ -30,4 +30,8 @@ class ApplicationController < ActionController::Base
   def require_editor
     redirect_to root_path unless current_user&.can_edit?
   end
+
+  def forbid_self
+    redirect_to user_path(@user), alert: t("users.admin.cannot_modify_self") if @user == current_user
+  end
 end

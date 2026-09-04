@@ -6,9 +6,9 @@
     <nav class="window-controls" aria-label="<%= t("monthly_periods.summary.show_label") %>">
       <ul class="inline-actions sizes">
         <% MonthlyPeriodWindow::SIZES.each do |n| %>
-          <li><a href="<%= summary_monthly_periods_path(meses: n, hasta: @window.anchor) %>" <%= 'aria-current="page"'.html_safe if @window.size_param == n.to_s %>><%= t("monthly_periods.summary.last_n", count: n) %></a></li>
+          <li><%= tag.a t("monthly_periods.summary.last_n", count: n), href: summary_monthly_periods_path(meses: n, hasta: @window.anchor), "aria-current": ("page" if @window.size_param == n.to_s) %></li>
         <% end %>
-        <li><a href="<%= summary_monthly_periods_path(meses: MonthlyPeriodWindow::ALL) %>" <%= 'aria-current="page"'.html_safe if @window.all? %>><%= t("monthly_periods.summary.all") %></a></li>
+        <li><%= tag.a t("monthly_periods.summary.all"), href: summary_monthly_periods_path(meses: MonthlyPeriodWindow::ALL), "aria-current": ("page" if @window.all?) %></li>
       </ul>
       <% unless @window.all? %>
         <ul class="inline-actions pager">
