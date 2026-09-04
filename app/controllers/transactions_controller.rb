@@ -1,4 +1,6 @@
 class TransactionsController < ApplicationController
+  RETURN_TO_MONTH = %r{\A/meses/(\d{4})-(\d{2})\z}
+
   before_action :require_login
   before_action :require_editor, only: [ :create, :edit, :update, :destroy ]
 
@@ -51,7 +53,7 @@ class TransactionsController < ApplicationController
 
     if (period = return_to_period)
       redirect_to monthly_period_path(period)
-    elsif params[:return_to].to_s.match?(%r{\A/meses/(\d{4})-(\d{2})\z})
+    elsif params[:return_to].to_s.match?(RETURN_TO_MONTH)
       redirect_to monthly_periods_path
     else
       redirect_to root_path
@@ -61,7 +63,7 @@ class TransactionsController < ApplicationController
   private
 
   def return_to_period
-    return unless params[:return_to].to_s.match(%r{\A/meses/(\d{4})-(\d{2})\z})
+    return unless params[:return_to].to_s.match(RETURN_TO_MONTH)
     MonthlyPeriod.find_by(year: $1, month: $2)
   end
 
