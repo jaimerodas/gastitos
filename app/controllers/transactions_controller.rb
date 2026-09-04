@@ -13,10 +13,9 @@ class TransactionsController < ApplicationController
 
     if @transaction.save
       ActivityLogger.log(current_user, :transaction_created, @transaction)
-      period = MonthlyPeriod.find_by!(year: @transaction.date.year, month: @transaction.date.month)
-      redirect_to monthly_period_path(period)
+      redirect_to monthly_period_path(@transaction.date.strftime("%Y-%m"))
     else
-      if (period = period_from_return_to)
+      if (period = return_to_period)
         @period = period
         @categories = Category.order(:name)
         render "monthly_periods/show", status: :unprocessable_entity
@@ -37,7 +36,8 @@ class TransactionsController < ApplicationController
 
     if @transaction.update(transaction_params)
       ActivityLogger.log(current_user, :transaction_updated, @transaction)
-      redirect_to safe_return_path
+      period = return_to_period
+      redirect_to period ? monthly_period_path(period) : root_path
     else
       @categories = Category.order(:name)
       render :edit, status: :unprocessable_entity
@@ -49,10 +49,10 @@ class TransactionsController < ApplicationController
     ActivityLogger.log(current_user, :transaction_destroyed, @transaction)
     @transaction.destroy
 
-    return_to = params[:return_to]
-    if return_to.present? && return_to.match(%r{\A/meses/(\d{4}-\d{2})\z})
-      period = MonthlyPeriod.find_by_slug!($1) rescue nil
-      redirect_to period ? monthly_period_path(period) : monthly_periods_path
+    if (period = return_to_period)
+      redirect_to monthly_period_path(period)
+    elsif params[:return_to].to_s.match?(%r{\A/meses/(\d{4})-(\d{2})\z})
+      redirect_to monthly_periods_path
     else
       redirect_to root_path
     end
@@ -60,21 +60,12 @@ class TransactionsController < ApplicationController
 
   private
 
-  def period_from_return_to
-    return unless params[:return_to].to_s.match(%r{\A/meses/(\d{4}-\d{2})\z})
-    MonthlyPeriod.find_by_slug!($1)
+  def return_to_period
+    return unless params[:return_to].to_s.match(%r{\A/meses/(\d{4})-(\d{2})\z})
+    MonthlyPeriod.find_by(year: $1, month: $2)
   end
 
   def transaction_params
     params.expect(transaction: [ :amount, :date, :description, :category_id ])
-  end
-
-  def safe_return_path
-    return_to = params[:return_to]
-    if return_to.present? && return_to.match?(%r{\A/meses/\d{4}-\d{2}\z})
-      return_to
-    else
-      root_path
-    end
   end
 end

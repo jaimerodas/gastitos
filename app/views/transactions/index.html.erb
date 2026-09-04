@@ -49,7 +49,7 @@
         <tbody>
           <% @dashboard.recent_transactions.each do |txn| %>
             <tr>
-              <td class="tabular"><% period = @dashboard.period_for(txn) %><% if period %><a href="<%= monthly_period_path(period) %>"><%= txn.date.strftime("%Y-%m") %></a>-<%= "%02d" % txn.date.day %><% else %><%= txn.date.strftime("%Y-%m-%d") %><% end %></td>
+              <td class="tabular"><a href="<%= monthly_period_path(txn.date.strftime("%Y-%m")) %>"><%= txn.date.strftime("%Y-%m") %></a>-<%= "%02d" % txn.date.day %></td>
               <td>
                 <% if current_user.can_edit? %>
                   <a href="<%= edit_transaction_path(txn) %>">

@@ -46,25 +46,4 @@ class TransactionsDashboardTest < ActiveSupport::TestCase
     assert_includes names, "Rideshare"
     assert_includes names, "Salary"
   end
-
-  test "period_for returns the matching MonthlyPeriod for a transaction in a covered month" do
-    period = @dashboard.period_for(transactions(:lunch))
-    assert_equal monthly_periods(:march_2026), period
-  end
-
-  test "period_for returns nil for a transaction whose month has no period" do
-    txn = transactions(:lunch)
-    monthly_periods(:march_2026).delete
-
-    assert_nil TransactionsDashboard.new.period_for(txn)
-  end
-
-  test "period_for handles an empty recent_transactions list" do
-    txn = transactions(:lunch)
-    Transaction.delete_all
-
-    dashboard = TransactionsDashboard.new
-    assert_empty dashboard.recent_transactions
-    assert_nil dashboard.period_for(txn)
-  end
 end

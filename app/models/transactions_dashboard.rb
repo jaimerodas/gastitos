@@ -13,22 +13,4 @@ class TransactionsDashboard
   def categories
     @categories ||= Category.order(:name)
   end
-
-  def period_for(transaction)
-    periods_by_month[[ transaction.date.year, transaction.date.month ]]
-  end
-
-  private
-
-  def periods_by_month
-    @periods_by_month ||= begin
-      year_months = recent_transactions.map { |t| [ t.date.year, t.date.month ] }.uniq
-      if year_months.any?
-        conditions = year_months.map { "(year = ? AND month = ?)" }.join(" OR ")
-        MonthlyPeriod.where(conditions, *year_months.flatten).index_by { |p| [ p.year, p.month ] }
-      else
-        {}
-      end
-    end
-  end
 end

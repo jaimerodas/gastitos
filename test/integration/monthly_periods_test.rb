@@ -150,6 +150,18 @@ class MonthlyPeriodsTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_path
   end
 
+  test "deleting the last transaction in a period with return_to redirects to the months index" do
+    txn = Transaction.create!(
+      amount: 10, date: Date.new(2026, 2, 5),
+      category: categories(:food), created_by: users(:jaime)
+    )
+    feb_period = MonthlyPeriod.find_by(month: 2, year: 2026)
+
+    delete transaction_path(txn), params: { return_to: monthly_period_path(feb_period) }
+    assert_nil MonthlyPeriod.find_by(month: 2, year: 2026)
+    assert_redirected_to monthly_periods_path
+  end
+
   # -- return_to for transaction edit --
 
   test "edit transaction with return_to shows correct cancel link" do
